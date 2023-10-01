@@ -1,0 +1,158 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: order.pauloponciano.pro
+spec: 
+  compositeTypeRef:
+    apiVersion: api.pauloponciano.pro/v1alpha1
+    kind: XCustomOrder
+  patchSets:
+    - name: common-fields
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.providerConfigName
+          toFieldPath: spec.providerConfigRef.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+  resources:
+    - name: order-api-gateway
+      base:
+        apiVersion: apigateway.aws.upbound.io/v1beta1
+        kind: RestAPI
+        metadata:
+          name: order-api
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            type: api-order
+        spec: 
+          forProvider:
+            name: order-api-gateway
+            region: to-be-patched
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields 
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              keepMapValues: true
+    - name: order-api-gateway-resource
+      base:
+        apiVersion: apigateway.aws.upbound.io/v1beta1
+        kind: Resource
+        metadata:
+          name: order-api-resource
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            type: order-resource
+        spec: 
+          forProvider:
+            region: to-be-patched
+            pathPart: order
+            matchControllerRef: true
+            parentIdSelector:
+              matchLabels:
+                type: api-order
+            restApiIdSelector:
+              matchLabels:
+                type: api-order
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: order-api-method-post
+      base:
+        apiVersion: apigateway.aws.upbound.io/v1beta1
+        kind: Method
+        metadata:
+          name: order-api-method-post
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            type: api-order-method-post
+        spec: 
+          forProvider:
+            region: to-be-patched
+            httpMethod: POST
+            authorization: NONE
+            restApiIdSelector:
+              matchLabels:
+                type: api-order
+            resourceIdSelector:
+              matchLabels: 
+                type: order-resource
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: api-order-lambda-integration
+      base:
+        apiVersion: apigateway.aws.upbound.io/v1beta1
+        kind: Integration
+        metadata:
+          name: api-order-lambda-integration
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            type: api-order-lambda-integration
+        spec: 
+          forProvider:
+            region: to-be-patched
+            type: AWS_PROXY
+            restApiIdSelector:
+              matchLabels:
+                type: api-order
+            httpMethodSelector:
+              matchLabels:
+                type: api-order-method-post
+            resourceIdSelector:
+              matchLabels:
+                type: order-resource
+            uriSelector:
+              matchLabels:
+                type: lambda-order
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: api-order-deployment
+      base:
+        apiVersion: apigateway.aws.upbound.io/v1beta1
+        kind: Deployment
+        metadata:
+          name: api-order-deployment
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            type: api-order-deployment
+        spec: 
+          forProvider:
+            region: to-be-patched
+            restApiIdSelector:
+              matchLabels:
+                type: api-order
+            stageName: Stage
+            stageDescription: Non-Production                
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: lambda-order
+      base:
+        apiVersion: lambda.aws.upbound.io/v1beta1
+        kind: Function
+        metadata:
+          name: lambda-order
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            type: lambda-order
+        spec: 
+          forProvider:
+            region: to-be-patched
+            handler: lambda_function.lambda_handler
+            publish: true
+            roleSelector:
+              matchLabels:
+                testing.upbound.io/example-name: test_lambda_alias
+            runtime: python3.9
+            s3Bucket: lambda-order-alias
+            s3Key: lambda-order.zip      
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    

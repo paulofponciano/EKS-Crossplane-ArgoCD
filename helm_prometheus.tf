@@ -8,7 +8,7 @@ resource "helm_release" "prometheus" {
   version = "48.3.1"
 
   values = [
-    "${file("./prometheus/values.yml")}"
+    "${file("./helm/prometheus/values.yml")}"
   ]
 
 

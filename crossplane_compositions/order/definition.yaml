@@ -1,0 +1,44 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xcustomorders.api.pauloponciano.pro
+spec:
+  group: api.pauloponciano.pro
+  names: 
+    kind: XCustomOrder
+    plural: xcustomorders
+  claimNames:
+    kind: CustomOrder
+    plural: customorders
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties: 
+          spec: 
+            type: object
+            properties:
+              resourceConfig:
+                  description: ResourceConfig defines general properties of this AWS
+                    resource.
+                  properties:
+                    providerConfigName:
+                      type: string
+                    region: 
+                      type: string
+                      oneOf:
+                        - pattern: 'us-east-2'
+                        - pattern: 'us-east-1'
+                    tags:
+                      additionalProperties:
+                        type: string
+                      description: Key-value map of resource tags.
+                      type: object
+                  required:
+                    - region
+                    - providerConfigName
+                    - tags
+                  type: object

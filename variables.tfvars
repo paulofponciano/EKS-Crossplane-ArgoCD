@@ -9,12 +9,12 @@ az2          = "us-east-2b"
 
 ## CLUSTER OPTIONS
 
-k8s_version = "1.27"
+k8s_version = "1.28"
 
 endpoint_private_access = true
 
 instance_type = [
-  "t3a.medium"
+  "m5.large"
 ]
 
 desired_size = "2"
@@ -25,10 +25,10 @@ enabled_cluster_log_types = [
   "api", "audit", "authenticator", "controllerManager", "scheduler"
 ]
 
-addon_cni_version       = "v1.13.4-eksbuild.1"
-addon_coredns_version   = "v1.10.1-eksbuild.2"
-addon_kubeproxy_version = "v1.27.3-eksbuild.2"
-addon_csi_version       = "v1.21.0-eksbuild.1"
+addon_cni_version       = "v1.15.0-eksbuild.2"
+addon_coredns_version   = "v1.10.1-eksbuild.4"
+addon_kubeproxy_version = "v1.28.2-eksbuild.2"
+addon_csi_version       = "v1.23.0-eksbuild.1"
 
 ## INGRESS OPTIONS (ISTIO NLB)
 
