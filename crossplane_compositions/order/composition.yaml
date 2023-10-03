@@ -16,6 +16,7 @@ spec:
           fromFieldPath: spec.resourceConfig.region
           toFieldPath: spec.forProvider.region
   resources:
+## API GATEWAY
     - name: order-api-gateway
       base:
         apiVersion: apigateway.aws.upbound.io/v1beta1
@@ -75,6 +76,7 @@ spec:
             region: to-be-patched
             httpMethod: POST
             authorization: NONE
+            matchControllerRef: true
             restApiIdSelector:
               matchLabels:
                 type: api-order
@@ -97,18 +99,20 @@ spec:
           forProvider:
             region: to-be-patched
             type: AWS_PROXY
+            matchControllerRef: true
             restApiIdSelector:
               matchLabels:
                 type: api-order
-            httpMethodSelector:
-              matchLabels:
-                type: api-order-method-post
-            resourceIdSelector:
-              matchLabels:
-                type: order-resource
             uriSelector:
               matchLabels:
                 type: lambda-order
+            integrationHttpMethod: POST
+            resourceIdSelector:
+              matchLabels:
+                type: order-resource
+            httpMethodSelector:
+              matchLabels: 
+                type: api-order-method-post        
       patches:
         - type: PatchSet
           patchSetName: common-fields
@@ -124,6 +128,7 @@ spec:
         spec: 
           forProvider:
             region: to-be-patched
+            matchControllerRef: true
             restApiIdSelector:
               matchLabels:
                 type: api-order
@@ -132,27 +137,136 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
+## LAMBDA IAM
+    - name: lambda-order-custom-policy
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Policy
+        metadata:
+          name: lambda-order-custom-policy
+          labels:
+            type: lambda-order-custom-policy
+        spec:
+          forProvider:
+            policy: |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                      "Effect": "Allow",
+                      "Action": [
+                          "logs:CreateLogGroup",
+                          "logs:CreateLogStream",
+                          "logs:PutLogEvents",
+                          "xray:PutTraceSegments",
+                          "xray:PutTelemetryRecords",
+                          "events:PutEvents",
+                          "s3:GetObject"
+                      ],
+                      "Resource": "*"
+                  }
+                ]
+              }
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: function-role
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Role
+        metadata:
+          name: lambda-order-role
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            type: lambda-order-role
+        spec:
+          forProvider:
+            assumeRolePolicy: |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "lambda.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              }
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-role"
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.functionRoleArn
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: status.functionRoleName
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.permissionsBoundaryArn
+          toFieldPath: spec.forProvider.permissionsBoundary
+    - name: lambda-basic-policy-attachment
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            #policyArn: arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+            policyArnSelector:
+              matchLabels:
+                type: lambda-order-custom-policy
+            roleSelector:
+              matchControllerRef: true
+              matchLabels:
+                type: lambda-order-role
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+## LAMBDA FUNCTION
     - name: lambda-order
       base:
         apiVersion: lambda.aws.upbound.io/v1beta1
         kind: Function
         metadata:
           name: lambda-order
+          annotations:
+            meta.upbound.io/example-id: lambda/v1beta1/function
+            uptest.upbound.io/timeout: "3600"
           labels:
-            app.kubernetes.io/created-by: crossplane
             type: lambda-order
-        spec: 
+        spec:
           forProvider:
+            handler: handler.js
+            packageType: Zip
             region: to-be-patched
-            handler: lambda_function.lambda_handler
-            publish: true
+            matchControllerRef: true
             roleSelector:
               matchLabels:
-                testing.upbound.io/example-name: test_lambda_alias
-            runtime: python3.9
-            s3Bucket: lambda-order-alias
-            s3Key: lambda-order.zip      
+                type: lambda-order-role
+            runtime: nodejs14.x
+            s3Bucket: pauloponciano-lambda-order
+            s3Key: lambda_order.zip
+            timeout: 60
       patches:
         - type: PatchSet
           patchSetName: common-fields
-    
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.forProvider.functionName
+        - type: FromCompositeFieldPath
+          fromFieldPath: status.functionRoleArn
+          toFieldPath: spec.forProvider.role
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.arn
+          toFieldPath: status.functionArn
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.id
+          toFieldPath: status.functionName
