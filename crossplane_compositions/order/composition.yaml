@@ -52,7 +52,6 @@ spec:
           forProvider:
             region: to-be-patched
             pathPart: order
-            matchControllerRef: true
             parentIdSelector:
               matchLabels:
                 type: api-order
@@ -76,8 +75,8 @@ spec:
             region: to-be-patched
             httpMethod: POST
             authorization: NONE
-            matchControllerRef: true
             restApiIdSelector:
+              matchControllerRef: true
               matchLabels:
                 type: api-order
             resourceIdSelector:
@@ -99,8 +98,8 @@ spec:
           forProvider:
             region: to-be-patched
             type: AWS_PROXY
-            matchControllerRef: true
             restApiIdSelector:
+              matchControllerRef: true
               matchLabels:
                 type: api-order
             uriSelector:
@@ -128,8 +127,8 @@ spec:
         spec: 
           forProvider:
             region: to-be-patched
-            matchControllerRef: true
             restApiIdSelector:
+              matchControllerRef: true
               matchLabels:
                 type: api-order
             stageName: Stage
@@ -244,11 +243,11 @@ spec:
             type: lambda-order
         spec:
           forProvider:
-            handler: handler.js
+            handler: handler.putOrder
             packageType: Zip
             region: to-be-patched
-            matchControllerRef: true
             roleSelector:
+              matchControllerRef: true
               matchLabels:
                 type: lambda-order-role
             runtime: nodejs14.x
@@ -270,3 +269,68 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.id
           toFieldPath: status.functionName
+    - name: lambda-order-permission
+      base:
+        apiVersion: lambda.aws.upbound.io/v1beta1
+        kind: Permission
+        metadata:
+          name: lambda-order-permission
+          labels:
+            type: lambda-order-permission
+        spec:
+          forProvider:
+            region: to-be-patched
+            action: lambda:InvokeFunction
+            functionNameSelector:
+              matchLabels:
+                type: lambda-order
+            principal: apigateway.amazonaws.com
+            statementId: AllowExecutionFromApiGateway
+            sourceArn: arn:aws:execute-api:us-east-1:310240692520:*/*/POST/order
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+## EVENT
+    - name: calabresoPizza-event-rule
+      base:
+        apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+        kind: Rule
+        metadata:
+          name: calabresoPizza-event-rule
+          labels:
+            type: calabresoPizza-event-rule
+        spec:
+          forProvider:
+            region: to-be-patched
+            eventBusName: default
+            isEnabled: true
+            eventPattern: |
+              {
+                "detail-type": ["order"],
+                "source": ["custom.orderManager"],
+                "detail": {
+                  "restaurantName": ["calabresoPizza"]
+                }
+              }
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: calabresoPizza-event-rule-target
+      base:
+        apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+        kind: Target
+        metadata:
+          name: calabresoPizza-event-rule-target
+          labels:
+            type: calabresoPizza-event-rule-target
+        spec:
+          forProvider:
+            arn: arn:aws:lambda:us-east-1:310240692520:function:pizzaHat-PizzaHatFunction-enupnr6xbPiC
+            eventBusName: default
+            ruleSelector:
+              matchLabels:
+                type: calabresoPizza-event-rule
+            region: to-be-patched
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
