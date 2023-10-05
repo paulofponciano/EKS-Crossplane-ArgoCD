@@ -303,7 +303,7 @@ spec:
                 type: lambda-order
             principal: apigateway.amazonaws.com
             statementId: AllowExecutionFromApiGateway
-            sourceArn: arn:aws:execute-api:us-east-1:310240692520:*/*/POST/order
+            sourceArn: arn:aws:execute-api:us-east-1:310240692520:*/*/POST/order #ExecutionArn
       patches:
         - type: PatchSet
           patchSetName: common-fields
@@ -324,7 +324,7 @@ spec:
                 type: lambda-consumer
             principal: events.amazonaws.com
             statementId: AllowExecutionFromEventBridge
-            sourceArn: arn:aws:events:us-east-1:310240692520:rule/*
+            sourceArn: arn:aws:events:us-east-1:310240692520:rule/* #RuleArn
       patches:
         - type: PatchSet
           patchSetName: common-fields
