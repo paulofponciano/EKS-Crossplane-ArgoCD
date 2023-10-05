@@ -169,6 +169,12 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              keepMapValues: true
     - name: function-role
       base:
         apiVersion: iam.aws.upbound.io/v1beta1
@@ -212,6 +218,12 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.permissionsBoundaryArn
           toFieldPath: spec.forProvider.permissionsBoundary
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              keepMapValues: true
     - name: lambda-basic-policy-attachment
       base:
         apiVersion: iam.aws.upbound.io/v1beta1
@@ -256,6 +268,12 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              keepMapValues: true
     - name: lambda-consumer
       base:
         apiVersion: lambda.aws.upbound.io/v1beta1
@@ -286,6 +304,12 @@ spec:
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
           toFieldPath: status.functionArn
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              keepMapValues: true
     - name: lambda-order-permission
       base:
         apiVersion: lambda.aws.upbound.io/v1beta1
@@ -353,6 +377,12 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              keepMapValues: true
     - name: calabresoPizza-event-rule-target
       base:
         apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
