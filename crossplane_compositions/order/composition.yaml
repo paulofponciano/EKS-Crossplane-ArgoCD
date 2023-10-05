@@ -132,7 +132,10 @@ spec:
               matchLabels:
                 type: api-order
             stageName: Stage
-            stageDescription: Non-Production                
+            stageDescription: Non-Production  
+          writeConnectionSecretToRef:
+            name: invokeurl-apigateway
+            namespace: crossplane-system            
       patches:
         - type: PatchSet
           patchSetName: common-fields
