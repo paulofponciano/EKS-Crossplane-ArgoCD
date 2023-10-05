@@ -218,7 +218,6 @@ spec:
         kind: RolePolicyAttachment
         spec:
           forProvider:
-            #policyArn: arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
             policyArnSelector:
               matchLabels:
                 type: lambda-order-custom-policy
@@ -257,18 +256,36 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: spec.forProvider.functionName
-        - type: FromCompositeFieldPath
-          fromFieldPath: status.functionRoleArn
-          toFieldPath: spec.forProvider.role
+    - name: lambda-consumer
+      base:
+        apiVersion: lambda.aws.upbound.io/v1beta1
+        kind: Function
+        metadata:
+          name: lambda-consumer
+          annotations:
+            meta.upbound.io/example-id: lambda/v1beta1/function
+            uptest.upbound.io/timeout: "3600"
+          labels:
+            type: lambda-consumer
+        spec:
+          forProvider:
+            handler: handler.calabresoPizza
+            packageType: Zip
+            region: to-be-patched
+            roleSelector:
+              matchControllerRef: true
+              matchLabels:
+                type: lambda-order-role
+            runtime: nodejs14.x
+            s3Bucket: pauloponciano-lambda-order
+            s3Key: lambda_consumer.zip
+            timeout: 60
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
           toFieldPath: status.functionArn
-        - type: ToCompositeFieldPath
-          fromFieldPath: status.atProvider.id
-          toFieldPath: status.functionName
     - name: lambda-order-permission
       base:
         apiVersion: lambda.aws.upbound.io/v1beta1
@@ -287,6 +304,27 @@ spec:
             principal: apigateway.amazonaws.com
             statementId: AllowExecutionFromApiGateway
             sourceArn: arn:aws:execute-api:us-east-1:310240692520:*/*/POST/order
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields
+    - name: lambda-consumer-permission
+      base:
+        apiVersion: lambda.aws.upbound.io/v1beta1
+        kind: Permission
+        metadata:
+          name: lambda-consumer-permission
+          labels:
+            type: lambda-consumer-permission
+        spec:
+          forProvider:
+            region: to-be-patched
+            action: lambda:InvokeFunction
+            functionNameSelector:
+              matchLabels:
+                type: lambda-consumer
+            principal: events.amazonaws.com
+            statementId: AllowExecutionFromEventBridge
+            sourceArn: arn:aws:events:us-east-1:310240692520:rule/*
       patches:
         - type: PatchSet
           patchSetName: common-fields
@@ -325,12 +363,16 @@ spec:
             type: calabresoPizza-event-rule-target
         spec:
           forProvider:
-            arn: arn:aws:lambda:us-east-1:310240692520:function:pizzaHat-PizzaHatFunction-enupnr6xbPiC
+            arn: to-be-patched
             eventBusName: default
             ruleSelector:
               matchLabels:
                 type: calabresoPizza-event-rule
             region: to-be-patched
+            targetId: lambda-consumer
       patches:
         - type: PatchSet
           patchSetName: common-fields
+        - type: FromCompositeFieldPath
+          fromFieldPath: status.functionArn
+          toFieldPath: spec.forProvider.arn

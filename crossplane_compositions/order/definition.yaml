@@ -42,3 +42,9 @@ spec:
                     - providerConfigName
                     - tags
                   type: object
+          status:
+              properties:
+                functionArn:
+                  description: Indicates this function's ARN
+                  type: string
+              type: object
