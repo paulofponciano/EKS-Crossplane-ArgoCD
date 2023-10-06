@@ -1,0 +1,77 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: subnet-private1-crossplane-us-east-2a
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    availabilityZone: us-east-2a
+    cidrBlock: 10.10.0.0/20
+    region: us-east-2
+    tags:
+      Name: subnet-private1-crossplane-us-east-2a
+      Owner: SRE
+      Project: PE
+    vpcIdSelector:
+      matchLabels: 
+        env: network-aws-vpc-1      
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: subnet-private2-crossplane-us-east-2b
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    availabilityZone: us-east-2b
+    cidrBlock: 10.10.32.0/20
+    region: us-east-2
+    tags:
+      Name: subnet-private2-crossplane-us-east-2b
+      Owner: SRE
+      Project: PE
+    vpcIdSelector:
+      matchLabels: 
+        env: network-aws-vpc-1
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: subnet-public1-crossplane-us-east-2a
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    availabilityZone: us-east-2a
+    cidrBlock: 10.10.64.0/20
+    region: us-east-2
+    tags:
+      Name: subnet-public1-crossplane-us-east-2a
+      Owner: SRE
+      Project: PE
+    vpcIdSelector:
+      matchLabels: 
+        env: network-aws-vpc-1
+    mapPublicIpOnLaunch: true
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: subnet-public2-crossplane-us-east-2b
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    availabilityZone: us-east-2b
+    cidrBlock: 10.10.96.0/20
+    region: us-east-2
+    tags:
+      Name: subnet-public2-crossplane-us-east-2b
+      Owner: SRE
+      Project: PE
+    vpcIdSelector:
+      matchLabels: 
+        env: network-aws-vpc-1
+    mapPublicIpOnLaunch: true

@@ -1,0 +1,62 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTable
+metadata:
+  name: rtb-crossplane-public
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    region: us-east-2
+    tags:
+      Name: rtb-crossplane-public
+    vpcIdSelector:
+      matchLabels: 
+        env: network-aws-vpc-1
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: rta-crossplane-public-2a
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    region: us-east-2
+    routeTableIdRef:
+      name: rtb-crossplane-public
+    subnetIdRef:
+      name: subnet-public1-crossplane-us-east-2a
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: rta-crossplane-public-2b
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    region: us-east-2
+    routeTableIdRef:
+      name: rtb-crossplane-public
+    subnetIdRef:
+      name: subnet-public2-crossplane-us-east-2b
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+  name: route-public
+  annotations:
+    argocd.argoproj.io/tracking-id: application:apps/Deployment:default/resource-deployment
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    gatewayIdRef:
+      name: crossplane-igw
+    region: us-east-2
+    routeTableIdRef:
+      name: rtb-crossplane-public
+
+
+
+
+
