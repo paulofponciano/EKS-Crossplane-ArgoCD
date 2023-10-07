@@ -30,7 +30,7 @@ spec:
                     region: 
                       type: string
                       oneOf:
-                        #- pattern: 'us-east-2'
+                        - pattern: 'us-east-2'
                         - pattern: 'us-east-1'
                     tags:
                       additionalProperties:
