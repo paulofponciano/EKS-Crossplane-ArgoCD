@@ -17,9 +17,9 @@ instance_type = [
   "m5.large"
 ]
 
-desired_size = "2"
-min_size     = "2"
-max_size     = "2"
+desired_size = "1"
+min_size     = "1"
+max_size     = "1"
 
 enabled_cluster_log_types = [
   "api", "audit", "authenticator", "controllerManager", "scheduler"
