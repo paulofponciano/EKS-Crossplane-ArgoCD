@@ -36,5 +36,3 @@ jobs:
      
       - name: push
         uses: ad-m/github-push-action@master
-        with:
-            branch: port-idp
