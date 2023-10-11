@@ -4,10 +4,6 @@ metadata:
   name: ${EKS_CLUSTER}
   namespace: kube-system
 spec:
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: "topology.kubernetes.io/zone"
-      whenUnsatisfiable: ScheduleAnyway
   ttlSecondsAfterEmpty: 60 # scale down nodes after 60 seconds without workloads (excluding daemons)
   ttlSecondsUntilExpired: 604800 # expire nodes after 7 days (in seconds) = 7 * 60 * 60 * 24
   limits:
