@@ -2,13 +2,13 @@ apiVersion: karpenter.sh/v1alpha5
 kind: Provisioner
 metadata:
   name: ${EKS_CLUSTER}
-  namespace: kube-system
+  namespace: karpenter
 spec:
   ttlSecondsAfterEmpty: 60 # scale down nodes after 60 seconds without workloads (excluding daemons)
   ttlSecondsUntilExpired: 604800 # expire nodes after 7 days (in seconds) = 7 * 60 * 60 * 24
   limits:
     resources:
-      cpu: 200 # limit to 100 CPU cores the maximum cluster usage
+      cpu: 200
   requirements:
     # Include general purpose instance families
     - key: karpenter.k8s.aws/instance-family
