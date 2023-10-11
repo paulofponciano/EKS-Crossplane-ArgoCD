@@ -1,6 +1,6 @@
 {
     "identifier": "order",
-    "description": "This blueprint represents a Order App",
+    "description": "This blueprint represents an Order App",
     "title": "Order",
     "icon": "Microservice",
     "schema": {
@@ -27,13 +27,6 @@
                 "us-east-2"
               ]
           },
-
-        "min-node-count": {
-          "type": "number",
-          "title": "Minimum number of nodes",
-          "default": 1,
-          "description": "The minimun number of nodes (autoscaler might increase this number)"
-        },
 
         "status": {
           "type": "string",
