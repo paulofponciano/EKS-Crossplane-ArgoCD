@@ -26,21 +26,6 @@ resources: # List of K8s resources to list, watch, and export to Port.
             title: '"vnncld"'
             blueprint: '"cluster"'
 
-# Custom
-
-  - kind: v1/namespaces
-    selector:
-      query: .metadata.name | startswith("environment")
-    port:
-      entity:
-        mappings:
-          - identifier: .metadata.name + "-" + "vnncld"
-            title: .metadata.labels.environment
-            blueprint: '"environment"'
-            relations:
-              cluster: '"vnncld"'
-# End Custom
-
   - kind: apps/v1/deployments
     selector:
       query: .metadata.namespace | startswith("kube") | not
@@ -67,30 +52,6 @@ resources: # List of K8s resources to list, watch, and export to Port.
               isHealthy: if .spec.replicas == .status.availableReplicas then "Healthy" else "Unhealthy" end
             relations:
               Namespace: .metadata.namespace + "-" + "vnncld"
-
-# Custom
-
-  - kind: apps/v1/deployments
-    selector:
-      query: .metadata.labels.type == "backend"
-    port:
-      entity:
-        mappings:
-          - identifier: .metadata.name + "-Deployment-" + .metadata.namespace + "-" + "vnncld"
-            title: .metadata.name
-            icon: '"Deployment"'
-            blueprint: '"backend-app"'
-            properties:
-              availableReplicas: .status.availableReplicas
-              labels: .metadata.labels
-              containers: (.spec.template.spec.containers | map({image}))
-              isHealthy: if .spec.replicas == .status.availableReplicas then "Healthy" else "Unhealthy" end
-              url: '"https://github.com/" + .metadata.labels.gitHubOrg + "/" + .metadata.labels.gitHubRepo'
-              language: .metadata.labels.language
-              on-call: .metadata.annotations.onCall
-            relations:
-              environment: .metadata.namespace + "-" + "vnncld"
-# End Custom
 
   - kind: apps/v1/daemonsets 
     selector:
@@ -227,3 +188,42 @@ resources: # List of K8s resources to list, watch, and export to Port.
               ready: .status.conditions[] | select(.type == "Ready") | .status
             relations:
               Cluster: '"vnncld"'
+
+  # Custom block
+
+  - kind: apps/v1/deployments
+    selector:
+      query: .metadata.labels.type == "backend"
+    port:
+      entity:
+        mappings:
+          - identifier: .metadata.name + "-Deployment-" + .metadata.namespace + "-" + "vnncld"
+            title: .metadata.name
+            icon: '"Deployment"'
+            blueprint: '"backend-app"'
+            properties:
+              availableReplicas: .status.availableReplicas
+              labels: .metadata.labels
+              containers: (.spec.template.spec.containers | map({image}))
+              isHealthy: if .spec.replicas == .status.availableReplicas then "Healthy" else "Unhealthy" end
+              url: '"https://github.com/" + .metadata.labels.gitHubOrg + "/" + .metadata.labels.gitHubRepo'
+              language: .metadata.labels.language
+              on-call: .metadata.annotations.onCall
+            relations:
+              environment: .metadata.namespace + "-" + "vnncld"
+  
+  - kind: api.pauloponciano.pro/v1alpha1/customorder
+    selector:
+      query: .metadata.namespace | startswith("environment")
+    port:
+      entity:
+        mappings:
+          - identifier: .metadata.name + "-" + .metadata.namespace + "-" + "vnncld"
+            title: .metadata.name
+            icon: '"Microservices"'
+            blueprint: '"order"'
+            properties:
+              provider: .spec.resourceConfig.providerConfigName
+              region: .spec.resourceConfig.region
+              
+# End Custom           
