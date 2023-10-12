@@ -1,6 +1,6 @@
 {
   "identifier": "create-order-app",
-  "title": "Create a order app",
+  "title": "Create an order app",
   "userInputs": {
     "properties": {
       "name": {
