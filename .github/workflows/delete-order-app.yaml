@@ -1,0 +1,29 @@
+name: Delete an order app
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        required: true
+        description: "The name of the app"
+jobs:
+  delete-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+    
+      - name: Delete an order app
+        run: |
+          rm deployed_infra/${{ inputs.name }}.yaml
+     
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -a -m "Delete app order ${{ inputs.name }}"
+     
+      - name: push
+        uses: ad-m/github-push-action@master

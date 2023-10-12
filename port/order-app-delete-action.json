@@ -1,0 +1,25 @@
+{
+  "identifier": "delete-order-app",
+  "title": "Delete a order app",
+  "userInputs": {
+    "properties": {
+      "name": {
+        "type": "string",
+        "title": "Name",
+        "description": "Confirm by typing the name of the order app"
+      }
+    },
+    "required": [
+      "name"
+    ]
+  },
+  "invocationMethod": {
+    "type": "GITHUB",
+    "org": "paulofponciano",
+    "repo": "EKS-Crossplane-ArgoCD",
+    "workflow": "delete-order-app.yaml",
+    "omitPayload": true
+  },
+  "trigger": "DELETE",
+  "description": "Delete a new order serverless app."
+}
