@@ -1,0 +1,14 @@
+# CLAIM
+---
+apiVersion: api.pauloponciano.pro/v1alpha1
+kind: CustomOrder
+metadata:
+  name: two
+  namespace: environment-crossplane
+spec:
+  resourceConfig:
+    providerConfigName: default
+    region: us-east-2
+    tags:
+      ownerName: SRE
+      projectName: PE
