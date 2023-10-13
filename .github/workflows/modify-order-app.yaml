@@ -22,8 +22,10 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
     
-      - name: Create an order app
+      - name: Modify an order app
         run: |
+          rm deployed_infra/${{ inputs.name }}.yaml
+          sleep 10
           chmod +x scripts/create-app-order.sh
           ./scripts/create-app-order.sh ${{ inputs.name }} ${{ inputs.provider }} ${{ inputs.region }}
      
