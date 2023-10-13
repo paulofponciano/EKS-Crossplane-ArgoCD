@@ -18,6 +18,13 @@
             data:
               server.insecure: 'true'
 
+        # Adicionar ao ConfigMap (argocd-cm)
+        
+          kubectl edit cm argocd-cm -n argocd
+
+            data:
+              application.resourceTrackingMethod: annotation
+
         # Recuperar password ArgoCD
 
           kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
