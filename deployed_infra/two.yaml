@@ -8,7 +8,7 @@ metadata:
 spec:
   resourceConfig:
     providerConfigName: default
-    region: us-east-2
+    region: us-east-1
     tags:
       ownerName: SRE
       projectName: PE
