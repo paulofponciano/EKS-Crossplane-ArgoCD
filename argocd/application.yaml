@@ -22,7 +22,8 @@ spec:
     - 'https://github.com/paulofponciano/EKS-Crossplane-ArgoCD.git'
   destinations:
     - namespace: '*'
-      server: '*'
+      server: 'https://kubernetes.default.svc'
+      name: 'in-cluster'
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
