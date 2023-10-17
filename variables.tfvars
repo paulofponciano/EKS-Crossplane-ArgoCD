@@ -14,7 +14,7 @@ k8s_version = "1.28"
 endpoint_private_access = true
 
 instance_type = [
-  "m5.large"
+  "t3a.medium"
 ]
 
 desired_size = "1"
