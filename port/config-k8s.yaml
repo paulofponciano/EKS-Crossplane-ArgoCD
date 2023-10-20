@@ -225,5 +225,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
             properties:
               provider: .spec.resourceConfig.providerConfigName
               region: .spec.resourceConfig.region
+            relations:
+              Namespace: .metadata.namespace + "-" + "vnncld"
               
 # End Custom           

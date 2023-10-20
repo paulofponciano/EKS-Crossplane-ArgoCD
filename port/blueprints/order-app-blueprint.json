@@ -1,51 +1,62 @@
 {
-    "identifier": "order",
-    "description": "This blueprint represents an Order App",
-    "title": "Order",
-    "icon": "Microservice",
-    "schema": {
-      "properties": {
-
-        "provider": {
-            "type": "string",
-            "title": "Provider",
-            "default": "n/a",
-            "description": "The provider where the app is deployed",
-            "enum": [
-                "aws",
-                "n/a"
-            ]
-        },
-
-        "region": {
-            "type": "string",
-            "title": "Region",
-            "default": "us-east-1",
-            "description": "The provider region",
-            "enum": [
-                "us-east-1",
-                "us-east-2"
-              ]
-          },
-
-        "status": {
-          "type": "string",
-          "title": "Status",
-          "description": "The app status"
+  "identifier": "order",
+  "description": "This blueprint represents an Order App",
+  "title": "Order",
+  "icon": "Microservice",
+  "schema": {
+    "properties": {
+      "provider": {
+        "icon": "DefaultProperty",
+        "title": "Provider",
+        "description": "The provider where the app is deployed",
+        "type": "string",
+        "default": "n/a",
+        "enum": [
+          "default",
+          "n/a"
+        ],
+        "enumColors": {
+          "default": "lightGray",
+          "n/a": "lightGray"
         }
       },
-      "required": [
-        "provider",
-        "region"
-      ]
-    },
-    "mirrorProperties": {},
-    "calculationProperties": {
-      "cluster": {
+      "region": {
         "type": "string",
-        "title": "Order",
-        "calculation": "if .properties.provider == \"aws\" then \"ck-port\" end"
+        "title": "Region",
+        "default": "us-east-1",
+        "description": "The provider region",
+        "enum": [
+          "us-east-1",
+          "us-east-2"
+        ],
+        "icon": "DefaultProperty"
+      },
+      "status": {
+        "type": "string",
+        "title": "Status",
+        "description": "The app status",
+        "icon": "DefaultProperty"
       }
     },
-    "relations": {}
+    "required": [
+      "provider",
+      "region"
+    ]
+  },
+  "mirrorProperties": {},
+  "calculationProperties": {
+    "cluster": {
+      "title": "Order",
+      "calculation": "if .properties.provider == \"aws\" then \"ck-port\" end",
+      "type": "string"
+    }
+  },
+  "relations": {
+    "Namespace": {
+      "title": "Namespace",
+      "target": "namespace",
+      "required": false,
+      "many": false
+    }
   }
+}
