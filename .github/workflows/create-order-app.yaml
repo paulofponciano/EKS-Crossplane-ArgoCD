@@ -13,6 +13,14 @@ on:
         required: true
         description: "The provider region"
         default: "us-east-1"
+      ownerName:
+        required: true
+        description: "The owner name"
+        default: "ownerName"
+      projectName:
+        required: true
+        description: "The project name"
+        default: "projectName"
 jobs:
   deploy-app:
     runs-on: ubuntu-latest
