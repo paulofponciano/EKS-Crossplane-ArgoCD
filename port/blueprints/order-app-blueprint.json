@@ -6,7 +6,7 @@
   "schema": {
     "properties": {
       "provider": {
-        "icon": "DefaultProperty",
+        "icon": "AWS",
         "title": "Provider",
         "description": "The provider where the app is deployed",
         "type": "string",
@@ -21,15 +21,19 @@
         }
       },
       "region": {
-        "type": "string",
+        "icon": "AWS",
         "title": "Region",
-        "default": "us-east-1",
         "description": "The provider region",
+        "type": "string",
+        "default": "us-east-1",
         "enum": [
           "us-east-1",
           "us-east-2"
         ],
-        "icon": "DefaultProperty"
+        "enumColors": {
+          "us-east-1": "lightGray",
+          "us-east-2": "lightGray"
+        }
       },
       "ownerName": {
         "title": "Owner",
@@ -42,6 +46,18 @@
         "description": "projectName",
         "icon": "Book",
         "type": "string"
+      },
+      "labels": {
+        "title": "Labels",
+        "description": "K8s labels",
+        "icon": "Cluster",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Annotations",
+        "description": "K8s annotations",
+        "icon": "Cluster",
+        "type": "object"
       }
     },
     "required": [
