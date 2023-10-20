@@ -204,5 +204,6 @@ resources: # List of K8s resources to list, watch, and export to Port.
               region: .spec.resourceConfig.region
               ownerName: .spec.resourceConfig.tags.ownerName
               projectName: .spec.resourceConfig.tags.projectName
+              labels: .metadata.labels
             relations:
               Namespace: .metadata.namespace + "-" + "vnncld"
