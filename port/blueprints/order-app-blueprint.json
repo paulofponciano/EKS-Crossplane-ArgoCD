@@ -31,26 +31,28 @@
         ],
         "icon": "DefaultProperty"
       },
-      "status": {
-        "type": "string",
-        "title": "Status",
-        "description": "The app status",
-        "icon": "DefaultProperty"
+      "ownerName": {
+        "title": "Owner",
+        "description": "ownerName",
+        "icon": "Book",
+        "type": "string"
+      },
+      "projectName": {
+        "title": "Project",
+        "description": "projectName",
+        "icon": "Book",
+        "type": "string"
       }
     },
     "required": [
       "provider",
-      "region"
+      "region",
+      "ownerName",
+      "projectName"
     ]
   },
   "mirrorProperties": {},
-  "calculationProperties": {
-    "cluster": {
-      "title": "Order",
-      "calculation": "if .properties.provider == \"aws\" then \"ck-port\" end",
-      "type": "string"
-    }
-  },
+  "calculationProperties": {},
   "relations": {
     "Namespace": {
       "title": "Namespace",

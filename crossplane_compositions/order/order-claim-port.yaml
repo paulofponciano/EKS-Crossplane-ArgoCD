@@ -10,5 +10,5 @@ spec:
     providerConfigName: PROVIDER
     region: REGION
     tags:
-      ownerName: SRE
-      projectName: PE
+      ownerName: OWNER
+      projectName: PROJECT

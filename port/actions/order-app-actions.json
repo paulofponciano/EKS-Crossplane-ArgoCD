@@ -40,17 +40,33 @@
             "us-east-1": "lightGray",
             "us-east-2": "lightGray"
           }
+        },
+        "ownerName": {
+          "title": "Owner",
+          "description": "ownerName",
+          "icon": "Book",
+          "type": "string"
+        },
+        "projectName": {
+          "title": "Project",
+          "description": "projectName",
+          "icon": "Book",
+          "type": "string"
         }
       },
       "required": [
         "name",
         "provider",
-        "region"
+        "region",
+        "ownerName",
+        "projectName"
       ],
       "order": [
         "name",
         "provider",
-        "region"
+        "region",
+        "ownerName",
+        "projectName"
       ]
     },
     "invocationMethod": {
