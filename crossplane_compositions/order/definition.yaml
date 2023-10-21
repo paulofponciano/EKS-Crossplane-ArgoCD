@@ -27,6 +27,8 @@ spec:
                   properties:
                     providerConfigName:
                       type: string
+                    name:
+                      type: string
                     region: 
                       type: string
                       oneOf:

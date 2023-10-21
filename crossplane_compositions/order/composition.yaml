@@ -28,11 +28,17 @@ spec:
             type: api-order
         spec: 
           forProvider:
-            name: order-api-gateway
+            name: to-be-patched
             region: to-be-patched
       patches:
         - type: PatchSet
           patchSetName: common-fields 
+        - fromFieldPath: metadata.name
+          toFieldPath: spec.forProvider.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-restapi"
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.tags
           toFieldPath: spec.forProvider.tags

@@ -2,10 +2,10 @@ apiVersion: api.pauloponciano.pro/v1alpha1
 kind: CustomOrder
 metadata:
   name: order-composition
-  namespace: default
+  namespace: environment-crossplane
 spec:
   resourceConfig:
-    providerConfigName: default
+    providerConfigName: aws
     region: us-east-1
     tags:
       ownerName: SRE

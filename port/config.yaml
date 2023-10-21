@@ -189,6 +189,8 @@ resources: # List of K8s resources to list, watch, and export to Port.
             relations:
               Cluster: '"vnncld"'
 
+## CUSTOM
+
   - kind: api.pauloponciano.pro/v1alpha1/customorder
     selector:
       query: .metadata.namespace | startswith("environment")

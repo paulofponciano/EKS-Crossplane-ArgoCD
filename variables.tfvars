@@ -14,7 +14,7 @@ k8s_version = "1.28"
 endpoint_private_access = true
 
 instance_type = [
-  "t3a.medium"
+  "m5.large"
 ]
 
 desired_size = "1"
@@ -39,7 +39,7 @@ proxy_protocol_v2            = "false"
 grafana_virtual_service_host = "grafana.pauloponciano.pro"
 kiali_virtual_service_host   = "kiali.pauloponciano.pro"
 jaeger_virtual_service_host  = "jaeger.pauloponciano.pro"
-argocd_virtual_service_host  = "pegasus-staging-nlb-ingress-9d9c51ff16678af8.elb.us-east-2.amazonaws.com"
+argocd_virtual_service_host  = "pegasus-staging-nlb-ingress-6768b604ecad5562.elb.us-east-2.amazonaws.com"
 
 ## KARPENTER OPTIONS
 
