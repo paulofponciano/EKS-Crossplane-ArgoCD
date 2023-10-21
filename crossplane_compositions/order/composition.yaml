@@ -33,7 +33,8 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields 
-        - fromFieldPath: metadata.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
           toFieldPath: spec.forProvider.name
           transforms:
             - type: string
@@ -211,13 +212,6 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-role"
         - type: ToCompositeFieldPath
           fromFieldPath: status.atProvider.arn
           toFieldPath: status.functionRoleArn
