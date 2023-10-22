@@ -7,14 +7,14 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings: # Mappings between one K8s object to one or many Port Entities. Each value is a JQ query.
-          - identifier: .metadata.name + "-" + "vnncld"
+          - identifier: .metadata.name + "-" + "paulop"
             title: .metadata.name
             blueprint: '"namespace"'
             properties:
               creationTimestamp: .metadata.creationTimestamp
               labels: .metadata.labels
             relations:
-              Cluster: '"vnncld"'
+              Cluster: '"paulop"'
 
   - kind: v1/namespaces
     selector:
@@ -22,8 +22,8 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings:
-          - identifier: '"vnncld"'
-            title: '"vnncld"'
+          - identifier: '"paulop"'
+            title: '"paulop"'
             blueprint: '"cluster"'
 
   - kind: apps/v1/deployments
@@ -32,7 +32,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings:
-          - identifier: .metadata.name + "-Deployment-" + .metadata.namespace + "-" + "vnncld"
+          - identifier: .metadata.name + "-Deployment-" + .metadata.namespace + "-" + "paulop"
             title: .metadata.name
             icon: '"Deployment"'
             blueprint: '"workload"'
@@ -51,7 +51,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
               containers: (.spec.template.spec.containers | map({name, image, resources}))
               isHealthy: if .spec.replicas == .status.availableReplicas then "Healthy" else "Unhealthy" end
             relations:
-              Namespace: .metadata.namespace + "-" + "vnncld"
+              Namespace: .metadata.namespace + "-" + "paulop"
 
   - kind: apps/v1/daemonsets 
     selector:
@@ -59,7 +59,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings:
-          - identifier: .metadata.name + "-DaemonSet-" + .metadata.namespace + "-" + "vnncld"
+          - identifier: .metadata.name + "-DaemonSet-" + .metadata.namespace + "-" + "paulop"
             title: .metadata.name
             blueprint: '"workload"'
             properties:
@@ -76,7 +76,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
               containers: (.spec.template.spec.containers | map({name, image, resources}))
               isHealthy: if .spec.replicas == .status.availableReplicas then "Healthy" else "Unhealthy" end
             relations:
-              Namespace: .metadata.namespace + "-" + "vnncld"
+              Namespace: .metadata.namespace + "-" + "paulop"
 
   - kind: apps/v1/statefulsets
     selector:
@@ -84,7 +84,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings: 
-          - identifier: .metadata.name + "-StatefulSet-" + .metadata.namespace + "-" + "vnncld"
+          - identifier: .metadata.name + "-StatefulSet-" + .metadata.namespace + "-" + "paulop"
             title: .metadata.name
             blueprint: '"workload"'
             properties:
@@ -101,7 +101,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
               containers: (.spec.template.spec.containers | map({name, image, resources}))
               isHealthy: if .spec.replicas == .status.availableReplicas then "Healthy" else "Unhealthy" end
             relations:
-              Namespace: .metadata.namespace + "-" + "vnncld"
+              Namespace: .metadata.namespace + "-" + "paulop"
 
   - kind: apps/v1/replicasets
     selector:
@@ -109,7 +109,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings:
-          - identifier: .metadata.name + "-ReplicaSet-" + .metadata.namespace + "-" + "vnncld"
+          - identifier: .metadata.name + "-ReplicaSet-" + .metadata.namespace + "-" + "paulop"
             title: .metadata.name
             icon: '"Deployment"'
             blueprint: '"replicaSet"'
@@ -126,7 +126,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
               containers: (.spec.template.spec.containers | map({name, image, resources}))
               isHealthy: if .spec.replicas == .status.availableReplicas then "Healthy" else "Unhealthy" end
             relations:
-              replicaSetManager: .metadata.ownerReferences[0].name + "-" + .metadata.ownerReferences[0].kind + "-" + .metadata.namespace + "-" + "vnncld" // []
+              replicaSetManager: .metadata.ownerReferences[0].name + "-" + .metadata.ownerReferences[0].kind + "-" + .metadata.namespace + "-" + "paulop" // []
 
   # Pods who are owned by replica-sets are connected directly to their deployment
   - kind: v1/pods
@@ -135,7 +135,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings:
-          - identifier: .metadata.name + "-" + .metadata.namespace + "-" + "vnncld"
+          - identifier: .metadata.name + "-" + .metadata.namespace + "-" + "paulop"
             title: .metadata.name
             icon: '"Microservices"'
             blueprint: '"pod"'
@@ -146,8 +146,8 @@ resources: # List of K8s resources to list, watch, and export to Port.
               containers: (.spec.containers | map({image, resources})) + .status.containerStatuses | group_by(.image) | map(add)
               conditions: .status.conditions
             relations:
-              replicaSet: .metadata.ownerReferences[0].name + "-" + "ReplicaSet" + "-" + .metadata.namespace + "-" + "vnncld"
-              Node: (.spec.nodeName) | (split(".")|join("_")) + "-" + "vnncld" // ""
+              replicaSet: .metadata.ownerReferences[0].name + "-" + "ReplicaSet" + "-" + .metadata.namespace + "-" + "paulop"
+              Node: (.spec.nodeName) | (split(".")|join("_")) + "-" + "paulop" // ""
   
   
   # Pods that are not managed by replicasets->deployments (daemonsets, statefulsets etc)
@@ -157,7 +157,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings:
-          - identifier: .metadata.name + "-" + .metadata.namespace + "-" + "vnncld"
+          - identifier: .metadata.name + "-" + .metadata.namespace + "-" + "paulop"
             title: .metadata.name
             icon: '"Microservices"'
             blueprint: '"pod"'
@@ -168,15 +168,15 @@ resources: # List of K8s resources to list, watch, and export to Port.
               containers: (.spec.containers | map({image, resources})) + .status.containerStatuses | group_by(.image) | map(add)
               conditions: .status.conditions
             relations:
-              workload: .metadata.ownerReferences[0].name + "-" + .metadata.ownerReferences[0].kind + "-" + .metadata.namespace + "-" + "vnncld"
-              Node: (.spec.nodeName) | (split(".")|join("_")) + "-" + "vnncld"
+              workload: .metadata.ownerReferences[0].name + "-" + .metadata.ownerReferences[0].kind + "-" + .metadata.namespace + "-" + "paulop"
+              Node: (.spec.nodeName) | (split(".")|join("_")) + "-" + "paulop"
               
   - kind: v1/nodes
     port:
       entity:
         mappings:
-          - identifier: (.metadata.name) | (split(".")|join("_")) + "-" + "vnncld"
-            title: .metadata.name + "-" + "vnncld"
+          - identifier: (.metadata.name) | (split(".")|join("_")) + "-" + "paulop"
+            title: .metadata.name + "-" + "paulop"
             icon: '"Node"'
             blueprint: '"node"'
             properties:
@@ -187,7 +187,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
               kubeletVersion: .status.nodeInfo.kubeletVersion | split("-") | .[0]
               ready: .status.conditions[] | select(.type == "Ready") | .status
             relations:
-              Cluster: '"vnncld"'
+              Cluster: '"paulop"'
 
 ## CUSTOM
 
@@ -197,7 +197,7 @@ resources: # List of K8s resources to list, watch, and export to Port.
     port:
       entity:
         mappings:
-          - identifier: .metadata.name + "-" + .metadata.namespace + "-" + "vnncld"
+          - identifier: .metadata.name + "-" + .metadata.namespace + "-" + "paulop"
             title: .metadata.name
             icon: '"Microservices"'
             blueprint: '"order"'
@@ -209,4 +209,4 @@ resources: # List of K8s resources to list, watch, and export to Port.
               labels: .metadata.labels
               annotations: .metadata.annotations
             relations:
-              Namespace: .metadata.namespace + "-" + "vnncld"
+              Namespace: .metadata.namespace + "-" + "paulop"

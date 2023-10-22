@@ -13,6 +13,7 @@
         "default": "n/a",
         "enum": [
           "default",
+          "aws",
           "n/a"
         ],
         "enumColors": {
