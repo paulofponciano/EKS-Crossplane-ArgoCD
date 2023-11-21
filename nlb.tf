@@ -34,10 +34,10 @@ resource "aws_lb_target_group" "https" {
 resource "aws_lb_listener" "ingress_443" {
   load_balancer_arn = aws_lb.istio_ingress.arn
   port              = "443"
-  protocol          = "TCP"
-  #protocol        = "TLS"
-  #certificate_arn = "arn:aws:acm:us-east-2:accountid:certificate/925700c8-03d1-4f4a-890a-249ffe2fa4f0"
-  #alpn_policy     = "HTTP2Preferred"
+  #protocol          = "TCP"
+  protocol        = "TLS"
+  certificate_arn = "arn:aws:acm:us-east-2:310240692520:certificate/bfbfe3ce-d347-4c42-8986-f45e95e04ca1"
+  alpn_policy     = "HTTP2Preferred"
 
   default_action {
     type             = "forward"
