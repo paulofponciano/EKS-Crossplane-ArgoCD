@@ -36,10 +36,10 @@ nlb_ingress_internal         = "false"
 enable_cross_zone_lb         = "true"
 nlb_ingress_type             = "network"
 proxy_protocol_v2            = "false"
-grafana_virtual_service_host = "grafana.pauloponciano.pro"
-kiali_virtual_service_host   = "kiali.pauloponciano.pro"
-jaeger_virtual_service_host  = "jaeger.pauloponciano.pro"
-argocd_virtual_service_host  = "pegasus-staging-nlb-ingress-6768b604ecad5562.elb.us-east-2.amazonaws.com"
+grafana_virtual_service_host = "grafana.pauloponciano.digital"
+kiali_virtual_service_host   = "kiali.pauloponciano.digital"
+jaeger_virtual_service_host  = "jaeger.pauloponciano.digital"
+argocd_virtual_service_host  = "argocd.pauloponciano.digital"
 
 ## KARPENTER OPTIONS
 
