@@ -1,0 +1,70 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: database.pauloponciano.digital
+spec: 
+  compositeTypeRef:
+    apiVersion: api.pauloponciano.digital/v1alpha1
+    kind: XCustomDatabase
+  patchSets:
+    - name: common-fields
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.providerConfigName
+          toFieldPath: spec.providerConfigRef.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+  resources:
+    - name: database-standard
+      base:
+        apiVersion: rds.aws.upbound.io/v1beta1
+        kind: Instance
+        metadata:
+          name: database-standard
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            backstage.io/kubernetes-id: crossplane-resource
+            type: rds-database
+        spec:
+          forProvider:
+            name: to-be-patched
+            region: to-be-patched
+            engine: to-be-patched
+            engineVersion: to-be-patched
+            instanceClass: to-be-patched
+            allocatedStorage: 20
+            multiAz: false
+            username: postgres
+            dbSubnetGroupName: crossplane-rds-subnet-group
+            publiclyAccessible: false
+            skipFinalSnapshot: true
+            autoMinorVersionUpgrade: false
+            passwordSecretRef:
+              key: password
+              name: example-dbinstance
+              namespace: crossplane-system
+          writeConnectionSecretToRef:
+            name: example-dbinstance-out
+            namespace: crossplane-system
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields 
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: spec.forProvider.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.engine
+          toFieldPath: spec.forProvider.engine
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.version
+          toFieldPath: spec.forProvider.engineVersion
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.size
+          toFieldPath: spec.forProvider.instanceClass
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.tags
+          toFieldPath: spec.forProvider.tags
+          policy:
+            mergeOptions:
+              keepMapValues: true
