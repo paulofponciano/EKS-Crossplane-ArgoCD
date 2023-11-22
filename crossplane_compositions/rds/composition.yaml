@@ -2,6 +2,8 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   name: database.pauloponciano.digital
+  labels:
+    db-engine: postgres
 spec: 
   compositeTypeRef:
     apiVersion: api.pauloponciano.digital/v1alpha1
@@ -30,7 +32,7 @@ spec:
           forProvider:
             region: to-be-patched
             engine: to-be-patched
-            engineVersion: to-be-patched
+            engineVersion: "15.4"
             instanceClass: to-be-patched
             allocatedStorage: 20
             multiAz: false
@@ -53,13 +55,6 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.engine
           toFieldPath: spec.forProvider.engine
-        - type: FromCompositeFieldPath
-          fromFieldPath: spec.resourceConfig.version
-          toFieldPath: spec.forProvider.engineVersion
-          transforms:
-            - type: string
-              string:
-                fmt: "%s"
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.size
           toFieldPath: spec.forProvider.instanceClass

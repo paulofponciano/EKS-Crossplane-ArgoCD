@@ -6,6 +6,9 @@ metadata:
   name: paulop
   namespace: environment-crossplane
 spec:
+  compositionSelector:
+    matchLabels:
+      db-engine: postgres  
   resourceConfig:
     providerConfigName: aws
     region: us-east-2
