@@ -1,0 +1,23 @@
+# CLAIM
+---
+apiVersion: api.pauloponciano.digital/v1alpha1
+kind: CustomDatabase
+metadata:
+  name: paulao-dev-db
+  namespace: environment-crossplane
+  labels:
+    backstage.io/kubernetes-id: rds
+spec:
+  compositionSelector:
+    matchLabels:
+      db-engine: postgres
+  resourceConfig:
+    providerConfigName: aws
+    region: us-east-2
+    size: db.t3.micro
+    engine: postgres
+    version: "15.4"
+    tags:
+      automation-by: crossplane
+      ownerName: group:default/sre
+
