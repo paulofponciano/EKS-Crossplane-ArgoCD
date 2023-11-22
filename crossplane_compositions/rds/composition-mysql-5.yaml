@@ -32,7 +32,7 @@ spec:
           forProvider:
             region: to-be-patched
             engine: to-be-patched
-            engineVersion: "5.08"
+            engineVersion: "8.0"
             instanceClass: to-be-patched
             allocatedStorage: 20
             multiAz: false
