@@ -56,6 +56,10 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.version
           toFieldPath: spec.forProvider.engineVersion
+          transforms:
+            - type: string
+              string:
+                fmt: "%s"
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.size
           toFieldPath: spec.forProvider.instanceClass
