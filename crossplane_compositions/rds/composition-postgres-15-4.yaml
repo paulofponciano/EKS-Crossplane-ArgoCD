@@ -44,10 +44,10 @@ spec:
             autoGeneratePassword: true
             passwordSecretRef:
               key: password
-              name: example-dbinstance
+              name: postgres-dbinstance
               namespace: crossplane-system
           writeConnectionSecretToRef:
-            name: example-dbinstance-out
+            name: postgres-dbinstance-out
             namespace: crossplane-system
       patches:
         - type: PatchSet

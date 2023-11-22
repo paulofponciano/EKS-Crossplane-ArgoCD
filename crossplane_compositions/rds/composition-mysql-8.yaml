@@ -44,10 +44,10 @@ spec:
             autoGeneratePassword: true
             passwordSecretRef:
               key: password
-              name: example-dbinstance
+              name: mysql-dbinstance
               namespace: crossplane-system
           writeConnectionSecretToRef:
-            name: example-dbinstance-out
+            name: mysql-dbinstance-out
             namespace: crossplane-system
       patches:
         - type: PatchSet

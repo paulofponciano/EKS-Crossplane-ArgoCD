@@ -37,6 +37,9 @@ spec:
                       type: string
                     engine:
                       type: string
+                      oneOf:
+                        - pattern: 'postgres'
+                        - pattern: 'mysql'
                     tags:
                       additionalProperties:
                         type: string
