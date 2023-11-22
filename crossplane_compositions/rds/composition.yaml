@@ -24,7 +24,7 @@ spec:
           name: database-standard
           labels:
             app.kubernetes.io/created-by: crossplane
-            backstage.io/kubernetes-id: crossplane-resource
+            backstage.io/kubernetes-id: rds
             type: rds-database
         spec:
           forProvider:
