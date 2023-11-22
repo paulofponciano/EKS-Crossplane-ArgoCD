@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: database.pauloponciano.digital
+  name: databasepostgres.pauloponciano.digital
   labels:
     db-engine: postgres
 spec: 
