@@ -3,7 +3,7 @@
 apiVersion: api.pauloponciano.digital/v1alpha1
 kind: CustomDatabase
 metadata:
-  name: paulop-db
+  name: paulop
   namespace: environment-crossplane
 spec:
   resourceConfig:

@@ -28,7 +28,6 @@ spec:
             type: rds-database
         spec:
           forProvider:
-            name: to-be-patched
             region: to-be-patched
             engine: to-be-patched
             engineVersion: to-be-patched
@@ -40,6 +39,7 @@ spec:
             publiclyAccessible: false
             skipFinalSnapshot: true
             autoMinorVersionUpgrade: false
+            autoGeneratePassword: true
             passwordSecretRef:
               key: password
               name: example-dbinstance
@@ -50,9 +50,6 @@ spec:
       patches:
         - type: PatchSet
           patchSetName: common-fields 
-        - type: FromCompositeFieldPath
-          fromFieldPath: metadata.name
-          toFieldPath: spec.forProvider.name
         - type: FromCompositeFieldPath
           fromFieldPath: spec.resourceConfig.engine
           toFieldPath: spec.forProvider.engine
