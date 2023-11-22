@@ -1,0 +1,18 @@
+# CLAIM
+---
+apiVersion: api.pauloponciano.digital/v1alpha1
+kind: CustomDatabase
+metadata:
+  name: paulop-dev-db
+  namespace: environment-crossplane
+spec:
+  resourceConfig:
+    providerConfigName: aws
+    region: us-east-2
+    size: db.t3.micro
+    engine: postgres
+    version: 15.4
+    tags:
+      automation-by: crossplane
+      ownerName: group:default/sre
+
