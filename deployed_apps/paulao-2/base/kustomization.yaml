@@ -1,0 +1,11 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: paulao-2
+resources:
+  - namespace.yaml
+  - paulao-2-quota.yaml
+  - paulao-2-deployment.yaml
+  - paulao-2-service.yaml
+  - paulao-2-vs.yaml
+  - paulao-2-hpa.yaml
