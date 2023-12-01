@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: go-app
+  labels:
+    kubernetes.io/metadata.name: go-app
+    backstage.io/kubernetes-id: go-app
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
