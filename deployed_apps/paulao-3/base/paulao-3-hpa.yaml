@@ -1,0 +1,16 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: paulao-3-hpa
+  labels:
+    app: paulao-3
+    version: 0.0.1
+    backstage.io/kubernetes-id: paulao-3
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: paulao-3
+ minReplicas: 1
+ maxReplicas: 4
+ targetCPUUtilizationPercentage: 75

@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paulao-3-service
+  namespace: paulao-3
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: paulao-3.pauloponciano.digital
+  labels:
+    app: paulao-3
+    version: 0.0.1
+    backstage.io/kubernetes-id: paulao-3
+spec:
+  type: ClusterIP
+  ports:
+  - name: tcp-node
+    port: 8080
+  selector:
+    app: paulao-3

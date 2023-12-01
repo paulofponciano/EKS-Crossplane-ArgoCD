@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: paulao-3
+  labels:
+    kubernetes.io/metadata.name: paulao-3
+    backstage.io/kubernetes-id: paulao-3
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes

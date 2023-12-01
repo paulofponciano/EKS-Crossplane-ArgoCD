@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: paulao-3-vs
+  namespace: paulao-3
+  labels:
+    app: paulao-3
+    version: 0.0.1
+    backstage.io/kubernetes-id: paulao-3
+spec:
+  gateways:
+  - istio-system/istio-ingressgateway
+  hosts:
+  - paulao-3.pauloponciano.digital
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: paulao-3-service
+      weight: 100
