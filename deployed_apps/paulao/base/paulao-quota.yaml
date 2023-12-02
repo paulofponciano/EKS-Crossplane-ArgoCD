@@ -1,0 +1,16 @@
+---
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: paulao-quota
+  namespace: paulao
+  labels:
+    kubernetes.io/metadata.name: paulao
+    backstage.io/kubernetes-id: paulao
+    istio-injection: enabled
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: 1Gi
+    limits.cpu: "2"
+    limits.memory: 2Gi
