@@ -1,9 +1,9 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: xcustomorders.api.pauloponciano.pro
+  name: xcustomorders.api.pauloponciano.digital
 spec:
-  group: api.pauloponciano.pro
+  group: api.pauloponciano.digital
   names: 
     kind: XCustomOrder
     plural: xcustomorders

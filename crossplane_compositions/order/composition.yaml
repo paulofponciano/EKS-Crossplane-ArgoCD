@@ -1,10 +1,10 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: order.pauloponciano.pro
+  name: order.pauloponciano.digital
 spec: 
   compositeTypeRef:
-    apiVersion: api.pauloponciano.pro/v1alpha1
+    apiVersion: api.pauloponciano.digital/v1alpha1
     kind: XCustomOrder
   patchSets:
     - name: common-fields
