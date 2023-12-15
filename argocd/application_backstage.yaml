@@ -66,9 +66,7 @@ spec:
   source:
     repoURL: https://github.com/paulofponciano-idp/gitops.git
     targetRevision: HEAD
-    path: deployed_apps
-    directory:
-      recurse: true
+    path: deployed_apps/applications
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
