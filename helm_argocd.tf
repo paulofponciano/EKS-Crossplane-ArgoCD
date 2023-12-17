@@ -54,7 +54,7 @@ spec:
     istio: ingressgateway 
   servers:
   - port:
-      number: 80
+      number: 443
       name: http
       protocol: HTTP
     hosts:
