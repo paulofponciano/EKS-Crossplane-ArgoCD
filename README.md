@@ -11,33 +11,35 @@
     # CROSSPLANE WITH AWS PROVIDERS
     # ARGOCD
 
-        # Adicionar ao ConfigMap (argocd-cmd-params-cm)
+# ArgoCD ConfigMaps
 
-        ```sh
-          kubectl edit cm argocd-cmd-params-cm -n argocd
-        ```
+Adicionar ao ConfigMap (argocd-cmd-params-cm):
 
-        ```sh
-            data:
-              server.insecure: 'true'
-        ```
+```sh
+kubectl edit cm argocd-cmd-params-cm -n argocd
+```
 
-        # Adicionar ao ConfigMap (argocd-cm)
+```sh
+data:
+  server.insecure: 'true'
+```
 
-          ```sh
-          kubectl edit cm argocd-cm -n argocd
-          ```
+Adicionar ao ConfigMap (argocd-cm):
 
-          ```sh
-            data:
-              application.resourceTrackingMethod: annotation
-          ```
+```sh
+kubectl edit cm argocd-cm -n argocd
+```
 
-        # Recuperar password ArgoCD
+```sh
+data:
+  application.resourceTrackingMethod: annotation
+```
 
-          ```sh
-          kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-          ```
+Recuperar password ArgoCD:
+
+```sh
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
