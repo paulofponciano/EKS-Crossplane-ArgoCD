@@ -35,6 +35,12 @@ resource "helm_release" "karpenter" {
   depends_on = [aws_eks_node_group.cluster]
 }
 
+resource "time_sleep" "wait_30_seconds_karpenter" {
+  depends_on = [helm_release.karpenter]
+
+  create_duration = "30s"
+}
+
 resource "kubectl_manifest" "karpenter_provisioner" {
   yaml_body = templatefile(
     "./karpenter/provisioner.yml.tpl", {
@@ -46,7 +52,8 @@ resource "kubectl_manifest" "karpenter_provisioner" {
   })
 
   depends_on = [
-    helm_release.karpenter
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
 
@@ -57,6 +64,7 @@ resource "kubectl_manifest" "karpenter_nodetemplate" {
   })
 
   depends_on = [
-    helm_release.karpenter
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
