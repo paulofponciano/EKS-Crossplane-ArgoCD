@@ -3,95 +3,95 @@ kind: Provider
 metadata:
   name: provider-aws-sqs
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-sqs:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-sqs:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-ec2
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-ec2:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-ec2:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-iam
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-iam:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-iam:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-rds
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-rds:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-rds:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-apigatewayv2
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-apigatewayv2:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-apigatewayv2:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-sns
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-sns:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-sns:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-dynamodb
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-dynamodb:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-cloudfront
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-cloudfront:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-cloudfront:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-kms
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-kms:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-kms:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-eks
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-eks:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-eks:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-lambda
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-lambda:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-lambda:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-cloudwatchevents
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-cloudwatchevents:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-cloudwatchevents:v1.0.0
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-aws-apigateway
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-apigateway:v0.46.0
+  package: xpkg.upbound.io/upbound/provider-aws-apigateway:v1.0.0
