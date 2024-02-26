@@ -5,7 +5,7 @@ resource "helm_release" "prometheus" {
   namespace        = "prometheus"
   create_namespace = true
 
-  version = "48.3.1"
+  version = "56.9.0"
 
   values = [
     "${file("./helm/prometheus/values.yml")}"
