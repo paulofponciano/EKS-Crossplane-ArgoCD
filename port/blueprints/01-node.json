@@ -1,0 +1,63 @@
+{
+    "identifier": "node",
+    "description": "This blueprint represents a k8s Node",
+    "title": "Node",
+    "icon": "Node",
+    "schema": {
+      "properties": {
+        "creationTimestamp": {
+          "type": "string",
+          "icon": "DeployedAt",
+          "title": "Created",
+          "format": "date-time",
+          "description": "When the Node was created (added to the cluster)"
+        },
+        "labels": {
+          "type": "object",
+          "title": "Labels",
+          "description": "Labels of the Node"
+        },
+        "ready": {
+          "type": "string",
+          "title": "Node Readiness",
+          "description": "Node ready status",
+          "enum": [
+            "True",
+            "False"
+          ],
+          "enumColors": {
+            "False": "red",
+            "True": "green"
+          }
+        },
+        "totalMemory": {
+          "type": "string",
+          "icon": "GPU",
+          "title": "Total Memory (kibibytes)",
+          "description": "Total memory capacity of the Node"
+        },
+        "kubeletVersion": {
+          "type": "string",
+          "title": "Kubelet Version",
+          "description": "The node's kubelet version"
+        },
+        "totalCPU": {
+          "type": "string",
+          "icon": "CPU",
+          "title": "Total CPU (milli-cores)",
+          "description": "Total CPU capacity of the Node"
+        }
+      },
+      "required": []
+    },
+    "mirrorProperties": {},
+    "calculationProperties": {},
+    "relations": {
+      "Cluster": {
+        "title": "Cluster",
+        "target": "cluster",
+        "required": false,
+        "many": true
+      }
+    }
+  }

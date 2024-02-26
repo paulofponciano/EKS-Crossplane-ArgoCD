@@ -1,0 +1,54 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xcustomdatabases.api.pauloponciano.digital
+spec:
+  group: api.pauloponciano.digital
+  names: 
+    kind: XCustomDatabase
+    plural: xcustomdatabases
+  claimNames:
+    kind: CustomDatabase
+    plural: customdatabases
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties: 
+          spec: 
+            type: object
+            properties:
+              resourceConfig:
+                  description: ResourceConfig defines general properties of this AWS
+                    resource.
+                  properties:
+                    providerConfigName:
+                      type: string
+                    name:
+                      type: string
+                    region: 
+                      type: string
+                      oneOf:
+                        - pattern: 'us-east-2'
+                    size:
+                      type: string
+                    engine:
+                      type: string
+                      oneOf:
+                        - pattern: 'postgres'
+                        - pattern: 'mysql'
+                    tags:
+                      additionalProperties:
+                        type: string
+                      description: Key-value map of resource tags.
+                      type: object
+                  required:
+                    - region
+                    - size
+                    - engine
+                    - providerConfigName
+                    - tags
+                  type: object

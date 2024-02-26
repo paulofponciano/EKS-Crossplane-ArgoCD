@@ -1,0 +1,119 @@
+[
+  {
+    "identifier": "create_an_order_app",
+    "title": "Create an Order App",
+    "icon": "Lambda",
+    "userInputs": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "Composition Name",
+          "icon": "Crossplane",
+          "type": "string"
+        },
+        "provider": {
+          "icon": "AWS",
+          "title": "Provider",
+          "description": "Provider",
+          "type": "string",
+          "default": "default",
+          "enum": [
+            "default",
+            "aws",
+            "n/a"
+          ],
+          "enumColors": {
+            "default": "lightGray",
+            "n/a": "lightGray"
+          }
+        },
+        "region": {
+          "title": "Region",
+          "description": "Provider region",
+          "icon": "AWS",
+          "type": "string",
+          "default": "us-east-1",
+          "enum": [
+            "us-east-1",
+            "us-east-2"
+          ],
+          "enumColors": {
+            "us-east-1": "lightGray",
+            "us-east-2": "lightGray"
+          }
+        },
+        "ownerName": {
+          "title": "Owner",
+          "description": "ownerName",
+          "icon": "Book",
+          "type": "string"
+        },
+        "projectName": {
+          "title": "Project",
+          "description": "projectName",
+          "icon": "Book",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "provider",
+        "region",
+        "ownerName",
+        "projectName"
+      ],
+      "order": [
+        "name",
+        "provider",
+        "region",
+        "ownerName",
+        "projectName"
+      ]
+    },
+    "invocationMethod": {
+      "type": "GITHUB",
+      "omitPayload": true,
+      "omitUserInputs": false,
+      "reportWorkflowStatus": true,
+      "org": "paulofponciano",
+      "repo": "EKS-Crossplane-ArgoCD",
+      "workflow": "create-order-app.yaml"
+    },
+    "trigger": "CREATE",
+    "description": "Create an Order App",
+    "requiredApproval": false
+  },
+  {
+    "identifier": "delete_an_order_app",
+    "title": "Delete an Order App",
+    "icon": "Alert",
+    "userInputs": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "Confirm by typing the name of the order app",
+          "icon": "Alert",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "order": [
+        "name"
+      ]
+    },
+    "invocationMethod": {
+      "type": "GITHUB",
+      "omitPayload": true,
+      "omitUserInputs": false,
+      "reportWorkflowStatus": true,
+      "org": "paulofponciano",
+      "repo": "EKS-Crossplane-ArgoCD",
+      "workflow": "delete-order-app.yaml"
+    },
+    "trigger": "DELETE",
+    "description": "Confirm by typing the name of the order app",
+    "requiredApproval": false
+  }
+]

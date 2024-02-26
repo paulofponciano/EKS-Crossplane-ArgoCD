@@ -1,0 +1,13 @@
+{
+    "identifier": "cluster",
+    "description": "This blueprint represents a Kubernetes Cluster",
+    "title": "Cluster",
+    "icon": "Cluster",
+    "schema": {
+      "properties": {},
+      "required": []
+    },
+    "mirrorProperties": {},
+    "calculationProperties": {},
+    "relations": {}
+  }

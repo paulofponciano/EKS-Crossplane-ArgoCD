@@ -1,0 +1,33 @@
+{
+    "identifier": "namespace",
+    "description": "This blueprint represents a k8s Namespace",
+    "title": "Namespace",
+    "icon": "Environment",
+    "schema": {
+      "properties": {
+        "creationTimestamp": {
+          "type": "string",
+          "title": "Created",
+          "format": "date-time",
+          "description": "When the Namespace was created"
+        },
+        "labels": {
+          "type": "object",
+          "title": "Labels",
+          "description": "Labels of the Namespace"
+        }
+      },
+      "required": []
+    },
+    "mirrorProperties": {},
+    "calculationProperties": {},
+    "relations": {
+      "Cluster": {
+        "title": "Cluster",
+        "description": "The namespace's Kubernetes cluster",
+        "target": "cluster",
+        "required": false,
+        "many": false
+      }
+    }
+  }

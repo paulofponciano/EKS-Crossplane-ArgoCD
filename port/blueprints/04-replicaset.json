@@ -1,0 +1,88 @@
+{
+    "identifier": "replicaSet",
+    "description": "This blueprint represents a k8s ReplicaSet",
+    "title": "ReplicaSet",
+    "icon": "Deployment",
+    "schema": {
+      "properties": {
+        "replicaSetJson": {
+          "title": "ReplicaSet Json",
+          "type": "object",
+          "description": "The ReplicaSet json"
+        },
+        "availableReplicas": {
+          "type": "number",
+          "title": "Running Replicas",
+          "description": "Current running replica count"
+        },
+        "containers": {
+          "type": "array",
+          "title": "Containers",
+          "default": [],
+          "description": "The containers for each pod instance of the Workload"
+        },
+        "creationTimestamp": {
+          "type": "string",
+          "title": "Created",
+          "format": "date-time",
+          "description": "When the Workload was created"
+        },
+        "labels": {
+          "type": "object",
+          "title": "Labels",
+          "description": "Labels of the Workload"
+        },
+        "replicas": {
+          "type": "number",
+          "title": "Wanted Replicas",
+          "description": "Wanted replica count"
+        },
+        "strategy": {
+          "type": "string",
+          "title": "Strategy",
+          "description": "Rollout Strategy"
+        },
+        "hasPrivileged": {
+          "type": "boolean",
+          "title": "Has Privileged Container"
+        },
+        "hasLatest": {
+          "type": "boolean",
+          "title": "Has 'latest' tag",
+          "description": "Has Container with 'latest' as image tag"
+        },
+        "hasLimits": {
+          "type": "boolean",
+          "title": "All containers have limits"
+        },
+        "isHealthy": {
+          "type": "string",
+          "enum": [
+            "Healthy",
+            "Unhealthy"
+          ],
+          "enumColors": {
+            "Healthy": "green",
+            "Unhealthy": "red"
+          },
+          "title": "ReplicaSet Health"
+        },
+        "strategyConfig": {
+          "type": "object",
+          "title": "Strategy Config",
+          "description": "The ReplicaSet rollout strategy"
+        }
+      },
+      "required": []
+    },
+    "mirrorProperties": {},
+    "calculationProperties": {},
+    "relations": {
+      "replicaSetManager": {
+        "title": "Manager",
+        "target": "workload",
+        "required": false,
+        "many": false
+      }
+    }
+  }

@@ -1,0 +1,14 @@
+# CLAIM
+---
+apiVersion: api.pauloponciano.pro/v1alpha1
+kind: CustomOrder
+metadata:
+  name: NAME
+  namespace: environment-crossplane
+spec:
+  resourceConfig:
+    providerConfigName: PROVIDER
+    region: REGION
+    tags:
+      ownerName: OWNER
+      projectName: PROJECT
