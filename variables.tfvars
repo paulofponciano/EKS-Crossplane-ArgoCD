@@ -25,10 +25,10 @@ enabled_cluster_log_types = [
   "api", "audit", "authenticator", "controllerManager", "scheduler"
 ]
 
-addon_csi_version       = "v1.27.0-eksbuild.1"
-addon_cni_version       = "v1.16.2-eksbuild.1"
+addon_csi_version       = "v1.29.1-eksbuild.1"
+addon_cni_version       = "v1.17.1-eksbuild.1"
 addon_coredns_version   = "v1.11.1-eksbuild.6"
-addon_kubeproxy_version = "v1.29.0-eksbuild.3"
+addon_kubeproxy_version = "v1.29.1-eksbuild.2"
 
 ## INGRESS OPTIONS (ISTIO NLB)
 
