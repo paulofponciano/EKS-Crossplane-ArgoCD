@@ -13,7 +13,7 @@
 
 ## ArgoCD ConfigMaps
 
-Adicionar ao ConfigMap (argocd-cmd-params-cm):
+- Adicionar ao ConfigMap (argocd-cmd-params-cm):
 
 ```sh
 kubectl edit cm argocd-cmd-params-cm -n argocd
@@ -24,7 +24,7 @@ data:
   server.insecure: 'true'
 ```
 
-Adicionar ao ConfigMap (argocd-cm):
+- Adicionar ao ConfigMap (argocd-cm):
 
 ```sh
 kubectl edit cm argocd-cm -n argocd
@@ -35,7 +35,7 @@ data:
   application.resourceTrackingMethod: annotation
 ```
 
-Recuperar password ArgoCD:
+- Recuperar password ArgoCD:
 
 ```sh
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
