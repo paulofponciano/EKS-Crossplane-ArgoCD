@@ -1,5 +1,8 @@
 # EKS-Crossplane-ArgoCD
 
+<p align="center"><img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*cZGTebNS79Uxutlk4_iyWA.png" width="250" alt="intro_medium_post"></p>
+
+
     # ISTIO-INGRESS
     # ISTIOD
     # ISTIO-BASE

@@ -7,11 +7,6 @@ resource "helm_release" "prometheus" {
 
   version = "57.2.0"
 
-  values = [
-    "${file("./helm/prometheus/values.yml")}"
-  ]
-
-
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
