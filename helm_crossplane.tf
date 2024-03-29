@@ -7,8 +7,9 @@ resource "helm_release" "crossplane" {
   depends_on = [
     aws_eks_node_group.cluster,
     helm_release.karpenter,
-    kubectl_manifest.karpenter_provisioner,
-    kubectl_manifest.karpenter_nodetemplate
+    kubectl_manifest.karpenter-nodeclass,
+    kubectl_manifest.karpenter-nodepool-default,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
 
@@ -24,8 +25,9 @@ resource "kubectl_manifest" "providers_aws_crossplane" {
   depends_on = [
     aws_eks_node_group.cluster,
     helm_release.karpenter,
-    kubectl_manifest.karpenter_provisioner,
-    kubectl_manifest.karpenter_nodetemplate,
-    helm_release.crossplane
+    kubectl_manifest.karpenter-nodeclass,
+    kubectl_manifest.karpenter-nodepool-default,
+    helm_release.crossplane,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }

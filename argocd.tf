@@ -3,7 +3,7 @@ data "kubectl_file_documents" "argocd_ns" {
 }
 
 data "kubectl_file_documents" "argocd" {
-  content = file("argocd/argocd_install.yaml")
+  content = file("argocd/argocd_install_2_10_5.yaml")
 }
 
 data "kubectl_file_documents" "image_updater" {
@@ -18,8 +18,9 @@ resource "kubectl_manifest" "argocd_ns" {
   depends_on = [
     aws_eks_node_group.cluster,
     helm_release.karpenter,
-    kubectl_manifest.karpenter_provisioner,
-    kubectl_manifest.karpenter_nodetemplate
+    kubectl_manifest.karpenter-nodeclass,
+    kubectl_manifest.karpenter-nodepool-default,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
 

@@ -5,7 +5,7 @@ resource "helm_release" "prometheus" {
   namespace        = "prometheus"
   create_namespace = true
 
-  version = "56.9.0"
+  version = "57.2.0"
 
   values = [
     "${file("./helm/prometheus/values.yml")}"
@@ -17,8 +17,9 @@ resource "helm_release" "prometheus" {
     aws_eks_node_group.cluster,
     kubernetes_config_map.aws-auth,
     helm_release.karpenter,
-    kubectl_manifest.karpenter_provisioner,
-    kubectl_manifest.karpenter_nodetemplate
+    kubectl_manifest.karpenter-nodeclass,
+    kubectl_manifest.karpenter-nodepool-default,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
 
@@ -46,7 +47,9 @@ YAML
     aws_eks_node_group.cluster,
     kubernetes_config_map.aws-auth,
     helm_release.istio_base,
-    helm_release.prometheus
+    helm_release.prometheus,
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 
 }
@@ -79,7 +82,9 @@ YAML
     aws_eks_node_group.cluster,
     kubernetes_config_map.aws-auth,
     helm_release.istio_base,
-    helm_release.prometheus
+    helm_release.prometheus,
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 
 }

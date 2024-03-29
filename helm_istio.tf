@@ -10,7 +10,9 @@ resource "helm_release" "istio_base" {
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
-    kubernetes_config_map.aws-auth
+    kubernetes_config_map.aws-auth,
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
 
@@ -27,7 +29,9 @@ resource "helm_release" "istiod" {
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
     kubernetes_config_map.aws-auth,
-    helm_release.istio_base
+    helm_release.istio_base,
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
 
@@ -125,7 +129,9 @@ resource "helm_release" "istio_ingress" {
     aws_eks_node_group.cluster,
     kubernetes_config_map.aws-auth,
     helm_release.istio_base,
-    helm_release.istiod
+    helm_release.istiod,
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 }
 
@@ -157,7 +163,9 @@ YAML
     helm_release.istio_base,
     helm_release.istiod,
     helm_release.alb_ingress_controller,
-    time_sleep.wait_30_seconds_albcontroller
+    time_sleep.wait_30_seconds_albcontroller,
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 
 }
@@ -183,7 +191,9 @@ YAML
     helm_release.istio_base,
     helm_release.istiod,
     helm_release.alb_ingress_controller,
-    time_sleep.wait_30_seconds_albcontroller
+    time_sleep.wait_30_seconds_albcontroller,
+    helm_release.karpenter,
+    time_sleep.wait_30_seconds_karpenter
   ]
 
 }
