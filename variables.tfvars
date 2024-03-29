@@ -1,6 +1,6 @@
 ## PROJECT BASE
 
-cluster_name = "pegasus"
+cluster_name = "pegasus-crossplane"
 environment  = "staging"
 project      = "devops"
 aws_region   = "us-east-2"

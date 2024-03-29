@@ -5,6 +5,11 @@
                 "ssm:GetParameter",
                 "iam:PassRole",
                 "iam:CreateServiceLinkedRole",
+                "iam:GetInstanceProfile",
+                "iam:CreateInstanceProfile",
+                "iam:TagInstanceProfile",
+                "iam:DeleteInstanceProfile",
+                "iam:AddRoleToInstanceProfile",
                 "ec2:RunInstances",
                 "ec2:DescribeSubnets",
                 "ec2:DescribeSecurityGroups",
@@ -18,6 +23,7 @@
                 "ec2:CreateTags",
                 "ec2:CreateLaunchTemplate",
                 "ec2:CreateFleet",
+                "ec2:DescribeSpotPriceHistory",
                 "pricing:GetProducts"
             ],
             "Effect": "Allow",
@@ -27,8 +33,8 @@
         {
             "Action": "ec2:TerminateInstances",
             "Condition": {
-                "StringLike": {
-                    "ec2:ResourceTag/Name": "*karpenter*"
+                "ForAllValues:StringEquals": {
+                    "aws:TagKeys": "karpenter.sh/managed-by"
                 }
             },
             "Effect": "Allow",
