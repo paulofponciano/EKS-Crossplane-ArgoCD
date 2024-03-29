@@ -19,6 +19,9 @@
 
 ## ArgoCD ConfigMaps
 
+> [!NOTE]
+> As alterações nos ConfigMaps do Argo já estão feitas no manifesto 'argocd_install_2_10_5.yaml'. Mantendo essa nota apenas para conhecimento.
+
 - Adicionar ao ConfigMap (argocd-cmd-params-cm):
 
 ```sh
