@@ -1,3 +1,7 @@
+![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)
+
 # EKS-Crossplane-ArgoCD
 
 <p align="center"><img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*cZGTebNS79Uxutlk4_iyWA.png" width="250" alt="intro_medium_post"></p>
