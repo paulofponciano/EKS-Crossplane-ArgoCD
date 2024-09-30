@@ -1,0 +1,45 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: recordroute53.pauloponciano.digital
+  labels:
+    service: route53
+    domain: pauloponciano.digital
+spec: 
+  compositeTypeRef:
+    apiVersion: api.pauloponciano.digital/v1alpha1
+    kind: XCustomRecord
+  patchSets:
+    - name: common-fields
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.providerConfigName
+          toFieldPath: spec.providerConfigRef.name
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.region
+          toFieldPath: spec.forProvider.region
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.resourceConfig.record
+          toFieldPath: spec.forProvider.name
+  resources:
+    - name: record-standard
+      base:
+        apiVersion: route53.aws.upbound.io/v1beta1
+        kind: Record
+        metadata:
+          name: record-standard
+          labels:
+            app.kubernetes.io/created-by: crossplane
+            backstage.io/kubernetes-id: record-standard
+            type: record-standard
+        spec:
+          forProvider:
+            alias:
+              - name: pegasus-staging-nlb-ingress-9e99ea4d081b6725.elb.us-east-2.amazonaws.com.
+                zoneId: ZLMOA37VPKANP
+                evaluateTargetHealth: true
+            type: A
+            zoneId: Z02136633A0BUJO7ZT4W7
+      patches:
+        - type: PatchSet
+          patchSetName: common-fields

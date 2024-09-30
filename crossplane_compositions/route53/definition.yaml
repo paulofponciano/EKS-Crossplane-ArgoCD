@@ -1,0 +1,40 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xcustomrecords.api.pauloponciano.digital
+spec:
+  group: api.pauloponciano.digital
+  names: 
+    kind: XCustomRecord
+    plural: xcustomrecords
+  claimNames:
+    kind: CustomRecord
+    plural: customrecords
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties: 
+          spec: 
+            type: object
+            properties:
+              resourceConfig:
+                  description: ResourceConfig defines general properties of this AWS
+                    resource.
+                  properties:
+                    providerConfigName:
+                      type: string
+                    record:
+                      type: string
+                    region: 
+                      type: string
+                      oneOf:
+                        - pattern: 'us-east-2'
+                  required:
+                    - region
+                    - providerConfigName
+                    - record
+                  type: object

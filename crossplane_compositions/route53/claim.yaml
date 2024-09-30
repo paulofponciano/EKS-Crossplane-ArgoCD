@@ -1,0 +1,18 @@
+# CLAIM
+---
+apiVersion: api.pauloponciano.digital/v1alpha1
+kind: CustomRecord
+metadata:
+  name: go-app-08
+  namespace: crossplane-system
+  labels:
+    backstage.io/kubernetes-id: record-standard
+spec:
+  compositionSelector:
+    matchLabels:
+      service: route53
+      domain: pauloponciano.digital
+  resourceConfig:
+    providerConfigName: aws
+    record: go-app-08
+    region: us-east-2
