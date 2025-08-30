@@ -191,20 +191,83 @@ data "aws_iam_policy_document" "csi_driver" {
 
 }
 
-resource "aws_iam_policy" "csi_driver" {
-  name        = join("-", ["policy", var.cluster_name, var.environment, "csi-driver"])
+data "aws_iam_policy_document" "csi" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "eks_ebs_csi_driver" {
+  name               = "eks-ebs-csi-driver-${var.cluster_name}"
+  assume_role_policy = data.aws_iam_policy_document.csi.json
+
+  tags = {
+    Environment = var.environment
+    Project     = var.project
+    Terraform   = true
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "amazon_ebs_csi_driver" {
+  role       = aws_iam_role.eks_ebs_csi_driver.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
+
+
+data "aws_iam_policy_document" "nodes_volume_create" {
+  version = "2012-10-17"
+
+  statement {
+
+    effect = "Allow"
+    actions = [
+      "ec2:CreateVolume",
+      "ec2:DeleteVolume",
+      "ec2:DetachVolume",
+      "ec2:AttachVolume",
+      "ec2:CreateTags",
+      "ec2:DeleteTags"
+    ]
+
+    resources = [
+      "*"
+    ]
+
+  }
+}
+
+resource "aws_iam_policy" "nodes_volume_create" {
+  name        = join("-", ["policy", var.cluster_name, var.environment, "nodes-volume-create"])
   path        = "/"
   description = var.cluster_name
 
-  policy = data.aws_iam_policy_document.csi_driver.json
+  policy = data.aws_iam_policy_document.nodes_volume_create.json
 }
 
-resource "aws_iam_policy_attachment" "csi_driver" {
-  name = "aws_load_balancer_controller_policy"
+resource "aws_iam_policy_attachment" "nodes_volume_create" {
+  name = "nodes_volume_create"
 
   roles = [aws_iam_role.eks_nodes_roles.name]
 
-  policy_arn = aws_iam_policy.csi_driver.arn
+  policy_arn = aws_iam_policy.nodes_volume_create.arn
 }
 
 ## CLUSTER
@@ -256,7 +319,7 @@ data "aws_iam_policy_document" "karpenter_controller_assume_role_policy" {
     condition {
       test     = "StringEquals"
       variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:karpenter:karpenter"]
+      values   = ["system:serviceaccount:kube-system:karpenter"]
     }
 
     principals {
@@ -282,8 +345,32 @@ resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller_attach" 
 }
 
 resource "aws_iam_instance_profile" "karpenter" {
-  name = "KarpenterNodeInstanceProfile"
+  name = "KarpenterNodeInstanceProfile-${var.cluster_name}"
   role = aws_iam_role.eks_nodes_roles.name
+}
+
+## IAM EKS Access entry
+
+resource "aws_eks_access_entry" "owner" {
+  count         = var.create_cluster_access_entry ? length(var.cluster_role_or_user_arn_access_entry) : 0
+  cluster_name  = aws_eks_cluster.eks_cluster.name
+  principal_arn = var.cluster_role_or_user_arn_access_entry[count.index]
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "AmazonEKSClusterAdminPolicy" {
+  count         = var.create_cluster_access_entry ? length(var.cluster_role_or_user_arn_access_entry) : 0
+  cluster_name  = aws_eks_cluster.eks_cluster.name
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  principal_arn = var.cluster_role_or_user_arn_access_entry[count.index]
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [
+    aws_eks_access_entry.owner
+  ]
 }
 
 ## ARGOCD IMAGE UPDATER
@@ -318,4 +405,135 @@ resource "aws_iam_role" "argocd_image_updater" {
 resource "aws_iam_role_policy_attachment" "ecr_access_origination" {
   role       = aws_iam_role.argocd_image_updater.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+## CROSSPLANE IRSA
+
+data "aws_iam_policy_document" "crossplane_providers_assume_role" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+
+    condition {
+      test     = "StringLike"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
+      values = [
+        "system:serviceaccount:crossplane-system:provider-aws-rds*",
+        "system:serviceaccount:crossplane-system:provider-aws-lambda*",
+        "system:serviceaccount:crossplane-system:provider-aws-iam*",
+        "system:serviceaccount:crossplane-system:provider-aws-s3*",
+        "system:serviceaccount:crossplane-system:provider-aws-apigatewayv2*",
+        "system:serviceaccount:crossplane-system:provider-aws-apigateway*",
+        "system:serviceaccount:crossplane-system:provider-aws-cloudwatchevents*"
+      ]
+    }
+
+    principals {
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
+      type        = "Federated"
+    }
+  }
+}
+
+resource "aws_iam_role" "crossplane_providers_role" {
+  name               = join("-", ["role", var.cluster_name, var.environment, "crossplane-providers"])
+  assume_role_policy = data.aws_iam_policy_document.crossplane_providers_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "crossplane_providers_cluster_ec2" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  role       = aws_iam_role.crossplane_providers_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "crossplane_providers_cluster_rds" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+  role       = aws_iam_role.crossplane_providers_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "crossplane_providers_cluster_sns" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+  role       = aws_iam_role.crossplane_providers_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "crossplane_providers_cluster_sqs" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
+  role       = aws_iam_role.crossplane_providers_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "crossplane_providers_cluster_lambda" {
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
+  role       = aws_iam_role.crossplane_providers_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "crossplane_providers_cluster_s3" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  role       = aws_iam_role.crossplane_providers_role.name
+}
+
+data "aws_iam_policy_document" "crossplane_providers_cluster_custom_policy" {
+  version = "2012-10-17"
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "iam:CreateRole",
+      "iam:DeleteRole",
+      "iam:GetRole",
+      "iam:ListRoles",
+      "iam:PassRole",
+      "iam:PutRolePolicy",
+      "iam:DeleteRolePolicy",
+      "iam:AttachRolePolicy",
+      "iam:DetachRolePolicy",
+      "iam:CreatePolicy",
+      "iam:DeletePolicy",
+      "iam:GetPolicy",
+      "iam:GetPolicyVersion",
+      "iam:ListPolicyVersions",
+      "iam:ListAttachedRolePolicies",
+      "iam:ListRolePolicies",
+      "iam:UpdateAssumeRolePolicy",
+      "iam:TagRole",
+      "iam:TagPolicy",
+      "iam:ListInstanceProfilesForRole",
+      "apigateway:POST",
+      "apigateway:PUT",
+      "apigateway:GET",
+      "apigateway:DELETE",
+      "apigateway:PATCH",
+      "cloudwatch:PutMetricData",
+      "cloudwatch:GetMetricData",
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:ListMetrics",
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
+      "events:PutRule",
+      "events:DeleteRule",
+      "events:DescribeRule",
+      "events:EnableRule",
+      "events:DisableRule",
+      "events:ListRules",
+      "events:PutTargets",
+      "events:RemoveTargets",
+      "events:ListTargetsByRule",
+      "events:PutEvents",
+      "events:TagResource",
+      "events:ListTagsForResource",
+      "xray:PutTraceSegments",
+      "xray:PutTelemetryRecords"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "crossplane_providers_cluster_custom_policy" {
+  name   = join("-", ["policy", var.cluster_name, var.environment, "crossplane-providers"])
+  policy = data.aws_iam_policy_document.crossplane_providers_cluster_custom_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "crossplane_providers_cluster_custom" {
+  policy_arn = aws_iam_policy.crossplane_providers_cluster_custom_policy.arn
+  role       = aws_iam_role.crossplane_providers_role.name
 }

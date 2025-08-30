@@ -3,7 +3,7 @@ data "kubectl_file_documents" "argocd_ns" {
 }
 
 data "kubectl_file_documents" "argocd" {
-  content = file("argocd/argocd_install_2_10_5.yaml")
+  content = file("argocd/argocd_install_3_0_5.yaml")
 }
 
 data "kubectl_file_documents" "image_updater" {
@@ -50,9 +50,10 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: argocd-gateway
+  namespace: argocd
 spec:
   selector:
-    istio: ingressgateway 
+    istio: ingressgateway
   servers:
   - port:
       number: 443
@@ -78,6 +79,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: argocd
+  namespace: argocd
 spec:
   hosts:
   - ${var.argocd_virtual_service_host}

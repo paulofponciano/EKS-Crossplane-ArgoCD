@@ -5,7 +5,12 @@ resource "helm_release" "prometheus" {
   namespace        = "prometheus"
   create_namespace = true
 
-  version = "57.2.0"
+  version = "75.4.0"
+
+  values = [
+    "${file("./helm/prometheus/values.yaml")}"
+  ]
+
 
   depends_on = [
     aws_eks_cluster.eks_cluster,
@@ -18,23 +23,55 @@ resource "helm_release" "prometheus" {
   ]
 }
 
+resource "kubectl_manifest" "prometheus_all_pod_monitor" {
+
+  count = 0
+
+  yaml_body = <<YAML
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: generic-stats-monitor
+  namespace: prometheus
+  labels:
+    monitoring: istio-proxies
+    release: istio
+spec:
+  selector:
+    matchExpressions:
+    - {key: istio-prometheus-ignore, operator: DoesNotExist}
+  namespaceSelector:
+    any: true
+  jobLabel: generic-stats
+  podMetricsEndpoints:
+  - path: /metrics
+    interval: 15s
+    relabelings:
+    - action: keep
+YAML
+
+  depends_on = [
+    helm_release.prometheus
+  ]
+}
+
 resource "kubectl_manifest" "grafana_gateway" {
   yaml_body = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: grafana
+  name: grafana-gateway
   namespace: prometheus
 spec:
   selector:
-    istio: ingressgateway 
+    istio: ingressgateway
   servers:
-  - port:
-      number: 443
-      name: http
-      protocol: HTTP
-    hosts:
-    - ${var.grafana_virtual_service_host}
+    - hosts:
+        - ${var.grafana_virtual_service_host}
+      port:
+        name: https-workloads
+        number: 443
+        protocol: HTTP
 YAML
 
   depends_on = [
@@ -57,19 +94,17 @@ metadata:
   name: grafana
   namespace: prometheus
 spec:
-  hosts:
-  - ${var.grafana_virtual_service_host}
   gateways:
-  - grafana
+    - grafana-gateway
+  hosts:
+    - ${var.grafana_virtual_service_host}
   http:
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: prometheus-grafana
-        port:
-          number: 80
+    - route:
+        - destination:
+            host: prometheus-grafana.prometheus.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
 YAML
 
   depends_on = [

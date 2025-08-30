@@ -18,4 +18,5 @@ spec:
       Owner: SRE
       Project: PE
   providerConfigRef:
-    name: default
+    name: irsa-providerconfig
+    kind: ProviderConfig

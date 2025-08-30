@@ -10,6 +10,7 @@
                 "iam:TagInstanceProfile",
                 "iam:DeleteInstanceProfile",
                 "iam:AddRoleToInstanceProfile",
+                "iam:RemoveRoleFromInstanceProfile",
                 "ec2:RunInstances",
                 "ec2:DescribeSubnets",
                 "ec2:DescribeSecurityGroups",
@@ -24,7 +25,8 @@
                 "ec2:CreateLaunchTemplate",
                 "ec2:CreateFleet",
                 "ec2:DescribeSpotPriceHistory",
-                "pricing:GetProducts"
+                "pricing:GetProducts",
+                "eks:DescribeCluster"
             ],
             "Effect": "Allow",
             "Resource": "*",

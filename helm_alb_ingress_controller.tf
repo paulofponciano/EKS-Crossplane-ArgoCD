@@ -1,3 +1,9 @@
+resource "time_sleep" "wait_30_seconds_alb_controller" {
+  depends_on = [helm_release.karpenter]
+
+  create_duration = "30s"
+}
+
 resource "helm_release" "alb_ingress_controller" {
   name             = "aws-load-balancer-controller"
   repository       = "https://aws.github.io/eks-charts"
@@ -39,7 +45,6 @@ resource "helm_release" "alb_ingress_controller" {
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
-    kubernetes_config_map.aws-auth,
     time_sleep.wait_30_seconds_karpenter
   ]
 }

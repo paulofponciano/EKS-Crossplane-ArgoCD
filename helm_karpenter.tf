@@ -1,11 +1,11 @@
 resource "helm_release" "karpenter" {
-  namespace        = "karpenter"
+  namespace        = "kube-system"
   create_namespace = true
 
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
-  version    = "v0.34.3"
+  version    = "1.5.1"
 
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
@@ -41,54 +41,32 @@ resource "time_sleep" "wait_30_seconds_karpenter" {
   create_duration = "30s"
 }
 
-# resource "kubectl_manifest" "karpenter_nodepool" {
-#   yaml_body = templatefile(
-#     "./karpenter/nodepool.yml.tpl", {
-#       EKS_CLUSTER        = var.cluster_name
-#       CAPACITY_TYPE      = var.karpenter_capacity_type
-#       INSTANCE_FAMILY    = var.karpenter_instance_class
-#       INSTANCE_SIZES     = var.karpenter_instance_size
-#       AVAILABILITY_ZONES = var.karpenter_azs
-#   })
-
-#   depends_on = [
-#     helm_release.karpenter,
-#     time_sleep.wait_30_seconds_karpenter
-#   ]
-# }
-
-# resource "kubectl_manifest" "karpenter_nodeclass" {
-#   yaml_body = templatefile(
-#     "./karpenter/nodeclass.yml.tpl", {
-#       EKS_CLUSTER = var.cluster_name
-#       NODE_ROLE   = aws_iam_role.eks_nodes_roles.name
-#   })
-
-#   depends_on = [
-#     helm_release.karpenter,
-#     time_sleep.wait_30_seconds_karpenter
-#   ]
-# }
-
 resource "kubectl_manifest" "karpenter-nodeclass" {
   yaml_body = <<YAML
-apiVersion: karpenter.k8s.aws/v1beta1
+apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
   name: ${var.cluster_name}-default
 spec:
-  amiFamily: AL2
-  role: role-${var.cluster_name}-${var.environment}-eks-nodes
+  amiFamily: AL2023
+  metadataOptions:
+    httpEndpoint: enabled
+    httpProtocolIPv6: disabled
+    httpPutResponseHopLimit: 2
+    httpTokens: required
   subnetSelectorTerms:
     - tags:
         karpenter.sh/discovery: "true"
   securityGroupSelectorTerms:
     - tags:
-        aws:eks:cluster-name: ${var.cluster_name}
+        aws:eks:cluster-name: pegasus
+  role: role-${var.cluster_name}-${var.environment}-eks-nodes
+  amiSelectorTerms:
+    - alias: al2023@v20250610
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
-        volumeSize: 30Gi
+        volumeSize: 20Gi
         volumeType: gp3
         iops: 3000
         deleteOnTermination: true
@@ -96,7 +74,6 @@ spec:
 YAML
 
   depends_on = [
-    kubernetes_config_map.aws-auth,
     helm_release.karpenter,
     time_sleep.wait_30_seconds_karpenter
   ]
@@ -104,7 +81,7 @@ YAML
 
 resource "kubectl_manifest" "karpenter-nodepool-default" {
   yaml_body = <<YAML
-apiVersion: karpenter.sh/v1beta1
+apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: ${var.cluster_name}-default
@@ -128,18 +105,18 @@ spec:
           operator: In
           values: [${join(",", [for az in var.karpenter_azs : "\"${az}\""])}]
       nodeClassRef:
-        apiVersion: karpenter.k8s.aws/v1beta1
+        group: karpenter.k8s.aws
         kind: EC2NodeClass
         name: ${var.cluster_name}-default
   limits:
-    cpu: 1000
+    cpu: 50
+    memory: 100Gi
   disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter: 72h
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 2h
 YAML
 
   depends_on = [
-    kubernetes_config_map.aws-auth,
     helm_release.karpenter,
     time_sleep.wait_30_seconds_karpenter
   ]

@@ -1,0 +1,90 @@
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-s3
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-s3:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-sns
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-sns:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-sqs
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-sqs:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-rds
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-rds:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-iam
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-iam:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-apigatewayv2
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-apigatewayv2:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-lambda
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-lambda:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-apigateway
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-apigateway:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-cloudwatchevents
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-cloudwatchevents:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-route53
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/provider-aws-route53:v2.0.0
+  runtimeConfigRef:
+    name: irsa-runtimeconfig
