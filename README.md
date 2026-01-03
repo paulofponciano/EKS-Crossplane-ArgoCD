@@ -57,12 +57,12 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 6.26.0 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | ~> 3.1.1 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | ~> 1.19.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
-| <a name="provider_time"></a> [time](#provider\_time) | n/a |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | ~> 4.1.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.26.0 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | 3.1.1 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 1.19.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.2.4 |
+| <a name="provider_time"></a> [time](#provider\_time) | 0.13.1 |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | 4.1.0 |
 
 ## Modules
 
@@ -170,6 +170,7 @@ No modules.
 | [time_sleep.wait_30_seconds_alb_controller](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_30_seconds_karpenter](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.wait_40_seconds_albcontroller](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_60_seconds_providers_crossplane](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_eks_cluster_auth.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 | [aws_iam_policy_document.aws_load_balancer_controller_assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
