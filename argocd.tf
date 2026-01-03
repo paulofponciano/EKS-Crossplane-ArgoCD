@@ -1,19 +1,17 @@
-data "kubectl_file_documents" "argocd_ns" {
-  content = file("argocd/argocd_ns.yaml")
-}
+resource "helm_release" "argocd" {
+  name             = "argocd"
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  version          = "9.2.2"
+  namespace        = "argocd"
+  create_namespace = true
 
-data "kubectl_file_documents" "argocd" {
-  content = file("argocd/argocd_install_3_0_5.yaml")
-}
-
-data "kubectl_file_documents" "image_updater" {
-  content = file("argocd/argocd_image_updater.yaml")
-}
-
-resource "kubectl_manifest" "argocd_ns" {
-  count              = length(data.kubectl_file_documents.argocd_ns.documents)
-  yaml_body          = element(data.kubectl_file_documents.argocd_ns.documents, count.index)
-  override_namespace = "argocd"
+  set = [
+    {
+      name  = "configs.params.server\\.insecure"
+      value = "true"
+    }
+  ]
 
   depends_on = [
     aws_eks_node_group.cluster,
@@ -21,26 +19,6 @@ resource "kubectl_manifest" "argocd_ns" {
     kubectl_manifest.karpenter-nodeclass,
     kubectl_manifest.karpenter-nodepool-default,
     time_sleep.wait_30_seconds_karpenter
-  ]
-}
-
-resource "kubectl_manifest" "argocd" {
-  count              = length(data.kubectl_file_documents.argocd.documents)
-  yaml_body          = element(data.kubectl_file_documents.argocd.documents, count.index)
-  override_namespace = "argocd"
-
-  depends_on = [
-    kubectl_manifest.argocd_ns
-  ]
-}
-
-resource "kubectl_manifest" "image_updater" {
-  count              = length(data.kubectl_file_documents.image_updater.documents)
-  yaml_body          = element(data.kubectl_file_documents.image_updater.documents, count.index)
-  override_namespace = "argocd"
-
-  depends_on = [
-    kubectl_manifest.argocd_ns
   ]
 }
 
@@ -66,10 +44,9 @@ YAML
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
-    kubernetes_config_map.aws-auth,
     helm_release.istio_base,
     helm_release.istiod,
-    kubectl_manifest.argocd
+    helm_release.argocd
   ]
 }
 
@@ -99,9 +76,8 @@ YAML
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
-    kubernetes_config_map.aws-auth,
     helm_release.istio_base,
     helm_release.istiod,
-    kubectl_manifest.argocd
+    helm_release.argocd
   ]
 }

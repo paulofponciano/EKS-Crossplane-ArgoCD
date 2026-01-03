@@ -375,37 +375,37 @@ resource "aws_eks_access_policy_association" "AmazonEKSClusterAdminPolicy" {
 
 ## ARGOCD IMAGE UPDATER
 
-data "aws_iam_policy_document" "argocd_image_updater" {
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-    effect  = "Allow"
+# data "aws_iam_policy_document" "argocd_image_updater" {
+#   statement {
+#     actions = ["sts:AssumeRoleWithWebIdentity"]
+#     effect  = "Allow"
 
-    condition {
-      test     = "StringEquals"
-      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:argocd:argocd-image-updater"]
-    }
+#     condition {
+#       test     = "StringEquals"
+#       variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
+#       values   = ["system:serviceaccount:argocd:argocd-image-updater"]
+#     }
 
-    principals {
-      identifiers = [aws_iam_openid_connect_provider.eks.arn]
-      type        = "Federated"
-    }
-  }
-}
+#     principals {
+#       identifiers = [aws_iam_openid_connect_provider.eks.arn]
+#       type        = "Federated"
+#     }
+#   }
+# }
 
-resource "aws_iam_role" "argocd_image_updater" {
-  name = join("-", ["role", var.cluster_name, var.environment, "argocd-image-updater"])
+# resource "aws_iam_role" "argocd_image_updater" {
+#   name = join("-", ["role", var.cluster_name, var.environment, "argocd-image-updater"])
 
-  assume_role_policy = data.aws_iam_policy_document.argocd_image_updater.json
-  tags = {
-    Terraform = "true"
-  }
-}
+#   assume_role_policy = data.aws_iam_policy_document.argocd_image_updater.json
+#   tags = {
+#     Terraform = "true"
+#   }
+# }
 
-resource "aws_iam_role_policy_attachment" "ecr_access_origination" {
-  role       = aws_iam_role.argocd_image_updater.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
+# resource "aws_iam_role_policy_attachment" "ecr_access_origination" {
+#   role       = aws_iam_role.argocd_image_updater.name
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+# }
 
 ## CROSSPLANE IRSA
 

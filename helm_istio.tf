@@ -42,85 +42,72 @@ resource "helm_release" "istio_ingress" {
 
   version = "1.25.2"
 
-  set {
-    name  = "service.type"
-    value = "NodePort"
-  }
-
-  set {
-    name  = "service.ports[0].name"
-    value = "tcp-statusport"
-  }
-
-  set {
-    name  = "service.ports[0].port"
-    value = 15021
-  }
-
-  set {
-    name  = "service.ports[0].targetPort"
-    value = 15021
-  }
-
-  set {
-    name  = "service.ports[0].nodePort"
-    value = 30021
-  }
-
-  set {
-    name  = "service.ports[0].protocol"
-    value = "TCP"
-  }
-
-  set {
-    name  = "service.ports[1].name"
-    value = "http2"
-  }
-
-  set {
-    name  = "service.ports[1].port"
-    value = 80
-  }
-
-  set {
-    name  = "service.ports[1].targetPort"
-    value = 80
-  }
-
-  set {
-    name  = "service.ports[1].nodePort"
-    value = 30080
-  }
-
-  set {
-    name  = "service.ports[1].protocol"
-    value = "TCP"
-  }
-
-  set {
-    name  = "service.ports[2].name"
-    value = "https"
-  }
-
-  set {
-    name  = "service.ports[2].port"
-    value = 443
-  }
-
-  set {
-    name  = "service.ports[2].targetPort"
-    value = 443
-  }
-
-  set {
-    name  = "service.ports[2].nodePort"
-    value = 30443
-  }
-
-  set {
-    name  = "service.ports[2].protocol"
-    value = "TCP"
-  }
+  set = [
+    {
+      name  = "service.type"
+      value = "NodePort"
+    },
+    {
+      name  = "service.ports[0].name"
+      value = "tcp-statusport"
+    },
+    {
+      name  = "service.ports[0].port"
+      value = "15021"
+    },
+    {
+      name  = "service.ports[0].targetPort"
+      value = "15021"
+    },
+    {
+      name  = "service.ports[0].nodePort"
+      value = "30021"
+    },
+    {
+      name  = "service.ports[0].protocol"
+      value = "TCP"
+    },
+    {
+      name  = "service.ports[1].name"
+      value = "http2"
+    },
+    {
+      name  = "service.ports[1].port"
+      value = "80"
+    },
+    {
+      name  = "service.ports[1].targetPort"
+      value = "80"
+    },
+    {
+      name  = "service.ports[1].nodePort"
+      value = "30080"
+    },
+    {
+      name  = "service.ports[1].protocol"
+      value = "TCP"
+    },
+    {
+      name  = "service.ports[2].name"
+      value = "https"
+    },
+    {
+      name  = "service.ports[2].port"
+      value = "443"
+    },
+    {
+      name  = "service.ports[2].targetPort"
+      value = "443"
+    },
+    {
+      name  = "service.ports[2].nodePort"
+      value = "30443"
+    },
+    {
+      name  = "service.ports[2].protocol"
+      value = "TCP"
+    }
+  ]
 
   depends_on = [
     aws_eks_cluster.eks_cluster,

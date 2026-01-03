@@ -1,6 +1,6 @@
 ## PROJECT BASE
 
-cluster_name = "pegasus"
+cluster_name = "pegasus-crossplane"
 environment  = "staging"
 project      = "devops"
 aws_region   = "us-east-2"
@@ -9,7 +9,7 @@ az2          = "us-east-2b"
 
 ## CLUSTER OPTIONS
 
-k8s_version = "1.33"
+k8s_version = "1.34"
 
 endpoint_private_access = true
 
@@ -28,10 +28,10 @@ enabled_cluster_log_types = [
 create_cluster_access_entry           = false
 cluster_role_or_user_arn_access_entry = ["arn:aws:iam::AWS_ACCOUNT_ID:role/AWS_ROLE_NAME"]
 
-addon_csi_version       = "v1.41.0-eksbuild.1"
-addon_cni_version       = "v1.19.3-eksbuild.1"
-addon_coredns_version   = "v1.11.4-eksbuild.2"
-addon_kubeproxy_version = "v1.32.3-eksbuild.2"
+addon_csi_version       = "v1.53.0-eksbuild.1"
+addon_cni_version       = "v1.20.5-eksbuild.1"
+addon_coredns_version   = "v1.12.4-eksbuild.1"
+addon_kubeproxy_version = "v1.34.1-eksbuild.2"
 
 ## INGRESS OPTIONS (ISTIO NLB)
 
@@ -39,8 +39,8 @@ nlb_ingress_internal         = false
 enable_cross_zone_lb         = true
 nlb_ingress_type             = "network"
 proxy_protocol_v2            = false
-grafana_virtual_service_host = "grafana.sevira.cloud"
-argocd_virtual_service_host  = "argocd.sevira.cloud"
+grafana_virtual_service_host = "grafana.paulofponciano.dev"
+argocd_virtual_service_host  = "argocd.paulofponciano.dev"
 
 ## KARPENTER OPTIONS
 

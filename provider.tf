@@ -2,15 +2,15 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.99.1"
+      version = "~> 6.26.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.17.0"
+      version = "~> 3.1.1"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.37.1"
+      version = "~> 3.0.1"
     }
     kubectl = {
       source  = "gavinbunney/kubectl"
@@ -28,7 +28,7 @@ provider "aws" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = aws_eks_cluster.eks_cluster.endpoint
     cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority.0.data)
     token                  = data.aws_eks_cluster_auth.default.token

@@ -11,6 +11,7 @@
                 "iam:DeleteInstanceProfile",
                 "iam:AddRoleToInstanceProfile",
                 "iam:RemoveRoleFromInstanceProfile",
+                "iam:ListInstanceProfiles",
                 "ec2:RunInstances",
                 "ec2:DescribeSubnets",
                 "ec2:DescribeSecurityGroups",

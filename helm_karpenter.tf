@@ -5,34 +5,35 @@ resource "helm_release" "karpenter" {
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
-  version    = "1.5.1"
+  version    = "1.8.3"
 
-  set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.karpenter_controller.arn
-  }
+  set = [
+    {
+      name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+      value = aws_iam_role.karpenter_controller.arn
+    },
+    {
+      name  = "settings.clusterName"
+      value = var.cluster_name
+    },
+    {
+      name  = "settings.clusterEndpoint"
+      value = aws_eks_cluster.eks_cluster.endpoint
+    },
+    {
+      name  = "settings.aws.defaultInstanceProfile"
+      value = aws_iam_instance_profile.karpenter.name
+    },
+    {
+      name  = "replicas"
+      value = "1"
+    }
+  ]
 
-  set {
-    name  = "settings.clusterName"
-    value = var.cluster_name
-  }
-
-  set {
-    name  = "settings.clusterEndpoint"
-    value = aws_eks_cluster.eks_cluster.endpoint
-  }
-
-  set {
-    name  = "settings.aws.defaultInstanceProfile"
-    value = aws_iam_instance_profile.karpenter.name
-  }
-
-  set {
-    name  = "replicas"
-    value = "1"
-  }
-
-  depends_on = [aws_eks_node_group.cluster]
+  depends_on = [
+    aws_eks_node_group.cluster,
+    null_resource.update_kubeconfig
+  ]
 }
 
 resource "time_sleep" "wait_30_seconds_karpenter" {
@@ -59,10 +60,10 @@ spec:
         karpenter.sh/discovery: "true"
   securityGroupSelectorTerms:
     - tags:
-        aws:eks:cluster-name: pegasus
+        aws:eks:cluster-name: ${var.cluster_name}
   role: role-${var.cluster_name}-${var.environment}-eks-nodes
   amiSelectorTerms:
-    - alias: al2023@v20250610
+    - alias: al2023@v20251209
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:

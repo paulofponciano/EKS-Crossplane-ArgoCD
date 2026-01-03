@@ -5,7 +5,7 @@ resource "helm_release" "prometheus" {
   namespace        = "prometheus"
   create_namespace = true
 
-  version = "75.4.0"
+  version = "80.2.0"
 
   values = [
     "${file("./helm/prometheus/values.yaml")}"
@@ -15,7 +15,6 @@ resource "helm_release" "prometheus" {
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
-    kubernetes_config_map.aws-auth,
     helm_release.karpenter,
     kubectl_manifest.karpenter-nodeclass,
     kubectl_manifest.karpenter-nodepool-default,
@@ -77,7 +76,6 @@ YAML
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
-    kubernetes_config_map.aws-auth,
     helm_release.istio_base,
     helm_release.prometheus,
     helm_release.karpenter,
@@ -110,7 +108,6 @@ YAML
   depends_on = [
     aws_eks_cluster.eks_cluster,
     aws_eks_node_group.cluster,
-    kubernetes_config_map.aws-auth,
     helm_release.istio_base,
     helm_release.prometheus,
     helm_release.karpenter,

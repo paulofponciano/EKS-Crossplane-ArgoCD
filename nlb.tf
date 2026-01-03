@@ -36,7 +36,7 @@ resource "aws_lb_listener" "ingress_443" {
   port              = "443"
   protocol          = "TCP"
   # protocol        = "TLS"
-  # certificate_arn = "CERTIFICATE_ARN"
+  # certificate_arn = "<CERTIFICATE_ARN>"
   # alpn_policy     = "HTTP2Preferred"
 
   default_action {
