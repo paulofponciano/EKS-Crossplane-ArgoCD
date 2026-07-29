@@ -102,6 +102,18 @@ variable "proxy_protocol_v2" {
   type = bool
 }
 
+variable "use_tls" {
+  type        = bool
+  description = "When true, the 443 listener terminates TLS using certificate_arn. When false, 443 is passed through as raw TCP."
+  default     = false
+}
+
+variable "certificate_arn" {
+  type        = string
+  description = "ACM certificate ARN used by the 443 TLS listener. Required when use_tls is true."
+  default     = ""
+}
+
 variable "addon_cni_version" {
   type        = string
   description = "CNI Version"

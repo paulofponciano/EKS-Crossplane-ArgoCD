@@ -39,6 +39,8 @@ nlb_ingress_internal         = false
 enable_cross_zone_lb         = true
 nlb_ingress_type             = "network"
 proxy_protocol_v2            = false
+use_tls                      = false
+certificate_arn              = "<CERTIFICATE_ARN>"
 grafana_virtual_service_host = "grafana.paulofponciano.dev"
 argocd_virtual_service_host  = "argocd.paulofponciano.dev"
 

@@ -5,10 +5,10 @@ resource "helm_release" "prometheus" {
   namespace        = "prometheus"
   create_namespace = true
 
-  version = "80.2.0"
+  version = "86.2.2"
 
   values = [
-    "${file("./helm/prometheus/values.yaml")}"
+    "${file("./prometheus/values.yaml")}"
   ]
 
 

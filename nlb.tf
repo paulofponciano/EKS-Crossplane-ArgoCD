@@ -31,13 +31,34 @@ resource "aws_lb_target_group" "https" {
   proxy_protocol_v2 = var.proxy_protocol_v2
 }
 
-resource "aws_lb_listener" "ingress_443" {
+resource "aws_lb_listener" "ingress_443_tls" {
+  count = var.use_tls ? 1 : 0
+
+  load_balancer_arn = aws_lb.istio_ingress.arn
+  port              = "443"
+  protocol          = "TLS"
+  certificate_arn   = var.certificate_arn
+  alpn_policy       = "HTTP2Preferred"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.https.arn
+  }
+
+  lifecycle {
+    precondition {
+      condition     = var.certificate_arn != ""
+      error_message = "certificate_arn must be set in variables.tfvars when use_tls is true."
+    }
+  }
+}
+
+resource "aws_lb_listener" "ingress_443_tcp" {
+  count = var.use_tls ? 0 : 1
+
   load_balancer_arn = aws_lb.istio_ingress.arn
   port              = "443"
   protocol          = "TCP"
-  # protocol        = "TLS"
-  # certificate_arn = "<CERTIFICATE_ARN>"
-  # alpn_policy     = "HTTP2Preferred"
 
   default_action {
     type             = "forward"

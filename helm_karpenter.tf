@@ -1,3 +1,11 @@
+data "aws_ssm_parameter" "al2023_recommended" {
+  name = "/aws/service/eks/optimized-ami/${aws_eks_cluster.eks_cluster.version}/amazon-linux-2023/x86_64/standard/recommended/image_name"
+}
+
+locals {
+  al2023_ami_version = regex("v\\d{8}", data.aws_ssm_parameter.al2023_recommended.value)
+}
+
 resource "helm_release" "karpenter" {
   namespace        = "kube-system"
   create_namespace = true
@@ -5,7 +13,7 @@ resource "helm_release" "karpenter" {
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
-  version    = "1.8.3"
+  version    = "1.12.1"
 
   set = [
     {
@@ -63,7 +71,7 @@ spec:
         aws:eks:cluster-name: ${var.cluster_name}
   role: role-${var.cluster_name}-${var.environment}-eks-nodes
   amiSelectorTerms:
-    - alias: al2023@v20251209
+    - alias: al2023@${local.al2023_ami_version}
   blockDeviceMappings:
     - deviceName: /dev/xvda
       ebs:
@@ -76,7 +84,8 @@ YAML
 
   depends_on = [
     helm_release.karpenter,
-    time_sleep.wait_30_seconds_karpenter
+    time_sleep.wait_30_seconds_karpenter,
+    data.aws_ssm_parameter.al2023_recommended
   ]
 }
 
